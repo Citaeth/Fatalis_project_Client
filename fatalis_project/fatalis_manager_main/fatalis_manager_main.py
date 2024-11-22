@@ -2,8 +2,8 @@ import sys
 from PySide6 import QtWidgets, QtGui
 import qfluentwidgets
 
-from fatalis_project.asset_manager.asset_manager_ui import AssetManagerInterface
-from fatalis_project.shot_manager.shot_manager_ui import ShotManagerInterface
+from fatalis_project.fatalis_manager_main.asset_manager.asset_manager_ui import AssetManagerInterface
+from fatalis_project.fatalis_manager_main.shot_manager.shot_manager_ui import ShotManagerInterface
 from fatalis_project.reference_gallery.reference_gallery_ui import ReferenceGalleryInterface
 
 class FatalisManagerMain(qfluentwidgets.FluentWindow):
@@ -18,6 +18,7 @@ class FatalisManagerMain(qfluentwidgets.FluentWindow):
         qfluentwidgets.setTheme(qfluentwidgets.Theme.DARK)
         qfluentwidgets.setThemeColor("#8e3838", save=False)
         self.resize(1500, 850)
+
         self.add_navigations_interface()
         self.force_refresh()
 

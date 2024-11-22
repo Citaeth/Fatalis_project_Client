@@ -1,9 +1,9 @@
 import sys
-from PySide6 import QtWidgets, QtGui
+from PySide6 import QtWidgets
 import qfluentwidgets
 
 from fatalis_project.fatalis_manager_main import fatalis_manager_main
-from fatalis_project.maya.asset_manager_maya.asset_manager_maya import AssetManagerInterfaceMaya
+from fatalis_project.maya.asset_manager_maya.asset_manager_maya_ui import AssetManagerInterfaceMaya
 from fatalis_project.maya.shot_manager_maya.shot_manager_maya_ui import ShotManagerInterfaceMaya
 
 from fatalis_project.reference_gallery.reference_gallery_ui import ReferenceGalleryInterface

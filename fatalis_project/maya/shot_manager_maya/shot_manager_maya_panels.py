@@ -1,7 +1,7 @@
 from PySide6 import QtWidgets, QtCore
 import qfluentwidgets
 
-from fatalis_project.shot_manager import shot_manager_panels
+from fatalis_project.fatalis_manager_main.shot_manager import shot_manager_panels
 
 
 class MayaShotTreePanel(shot_manager_panels.ShotTreePanel):
@@ -17,12 +17,8 @@ class MayaShotTaskFilterPanel(shot_manager_panels.ShotTaskFilterPanel):
     """
     Maya iteration for the ShotTaskFilterPanel, override if needed change in maya from the main in asset manager panels.
     """
-    def __init__(self):
-        super().__init__()
 
-        self.hBoxLayout = QtWidgets.QHBoxLayout(self)
-        self.listWidget = qfluentwidgets.ListWidget(self)
-
+    def define_stand(self):
         stands = [
             "concept",
             "layout",
@@ -32,14 +28,7 @@ class MayaShotTaskFilterPanel(shot_manager_panels.ShotTaskFilterPanel):
             "editing",
             "youping",
         ]
-        for stand in stands:
-            item = QtWidgets.QListWidgetItem(stand)
-            item.setCheckState(QtCore.Qt.Unchecked)
-            self.listWidget.addItem(item)
-
-        self.setStyleSheet("Demo{background: rgb(249, 249, 249)} ")
-        self.hBoxLayout.setContentsMargins(0, 0, 0, 0)
-        self.hBoxLayout.addWidget(self.listWidget)
+        return stands
 
 
 class MayaShotFilterBarPanel(shot_manager_panels.ShotFilterBarPanel):
@@ -64,11 +53,7 @@ class MayaShotLoadingPanel(shot_manager_panels.ShotLoadingPanel):
     """
     Maya iteration for the ShotLoadingPanel, override if needed change in maya from the main in asset manager panels.
     """
-
-    def __init__(self):
-        super().__init__()
-        self.vBoxLayout = QtWidgets.QVBoxLayout(self)
-
+    def create_buttons(self):
         load_in_maya_button = qfluentwidgets.PushButton('Load Shot in Maya')
         load_in_maya_button.clicked.connect(self.load_shot_in_maya)
         self.vBoxLayout.addWidget(load_in_maya_button)

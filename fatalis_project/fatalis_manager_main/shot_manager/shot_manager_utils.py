@@ -1,6 +1,6 @@
 from PySide6 import QtWidgets
 
-from fatalis_project.asset_manager import asset_manager_panels as panels
+from fatalis_project.fatalis_manager_main.shot_manager import shot_manager_panels as panels
 
 
 def create_tab():
@@ -15,8 +15,8 @@ def create_tab():
     left_tab = QtWidgets.QWidget()
     left_tab_layout = QtWidgets.QVBoxLayout(left_tab)
     left_tab.setLayout(left_tab_layout)
-    left_tab_layout.addWidget(panels.AssetTreePanel(True))
-    left_tab_layout.addWidget(panels.AssetTaskFilterPanel())
+    left_tab_layout.addWidget(panels.ShotTreePanel(True))
+    left_tab_layout.addWidget(panels.ShotTaskFilterPanel())
     left_tab_layout.setStretch(0, 3)
     left_tab_layout.setStretch(1, 2)
     tabs.append([left_tab, 0])
@@ -25,8 +25,8 @@ def create_tab():
     mid_tab = QtWidgets.QWidget()
     mid_tab_layout = QtWidgets.QVBoxLayout(mid_tab)
     mid_tab.setLayout(mid_tab_layout)
-    mid_tab_layout.addWidget(panels.AssetFilterBarPanel())
-    mid_tab_layout.addWidget(panels.AssetMainTablePanel())
+    mid_tab_layout.addWidget(panels.ShotFilterBarPanel())
+    mid_tab_layout.addWidget(panels.ShotMainTablePanel())
     mid_tab_layout.setStretch(0, 0)
     mid_tab_layout.setStretch(1, 3)
     tabs.append([mid_tab, 3])
@@ -35,8 +35,8 @@ def create_tab():
     right_tab = QtWidgets.QWidget()
     right_tab_layout = QtWidgets.QVBoxLayout(right_tab)
     right_tab.setLayout(right_tab_layout)
-    right_tab_layout.addWidget(panels.AssetInfoPanel())
-    right_tab_layout.addWidget(panels.AssetLoadingPanel())
+    right_tab_layout.addWidget(panels.ShotInfoPanel())
+    right_tab_layout.addWidget(panels.ShotLoadingPanel())
     right_tab_layout.setStretch(0, 1)
     tabs.append([right_tab, 1])
 

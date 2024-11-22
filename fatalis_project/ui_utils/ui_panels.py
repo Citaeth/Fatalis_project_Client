@@ -32,6 +32,17 @@ class TaskFilterPanel(QtWidgets.QWidget):
         self.hBoxLayout = QtWidgets.QHBoxLayout(self)
         self.listWidget = qfluentwidgets.ListWidget(self)
 
+        stands = self.define_stand()
+        for stand in stands:
+            item = QtWidgets.QListWidgetItem(stand)
+            item.setCheckState(QtCore.Qt.Unchecked)
+            self.listWidget.addItem(item)
+
+        self.setStyleSheet("Demo{background: rgb(249, 249, 249)} ")
+        self.hBoxLayout.setContentsMargins(0, 0, 0, 0)
+        self.hBoxLayout.addWidget(self.listWidget)
+
+    def define_stand(self):
         stands = [
             "concept",
             "modeling",
@@ -46,15 +57,7 @@ class TaskFilterPanel(QtWidgets.QWidget):
             "editing",
             "youping",
         ]
-        for stand in stands:
-            item = QtWidgets.QListWidgetItem(stand)
-            item.setCheckState(QtCore.Qt.Unchecked)
-            self.listWidget.addItem(item)
-
-        self.setStyleSheet("Demo{background: rgb(249, 249, 249)} ")
-        self.hBoxLayout.setContentsMargins(0, 0, 0, 0)
-        self.hBoxLayout.addWidget(self.listWidget)
-
+        return stands
 
 class FilterBarPanel(QtWidgets.QWidget):
     def __init__(self):
@@ -105,6 +108,19 @@ class MainTablePanel(QtWidgets.QWidget):
         # enable border
         self.tableView.setBorderVisible(True)
 
+        self.define_table_content()
+
+        assets_infos = [
+        ]
+        assets_infos += assets_infos
+        for i, asset_info in enumerate(assets_infos):
+            for j in range(6):
+                self.tableView.setItem(i, j, QtWidgets.QTableWidgetItem(asset_info[j]))
+
+        self.setStyleSheet("Demo{background: rgb(255, 255, 255)} ")
+        self.hBoxLayout.addWidget(self.tableView)
+
+    def define_table_content(self):
         self.tableView.setRowCount(60)
         self.tableView.setColumnCount(6)
         self.tableView.verticalHeader().hide()
@@ -116,16 +132,6 @@ class MainTablePanel(QtWidgets.QWidget):
         self.tableView.setColumnWidth(3, 100)
         self.tableView.setColumnWidth(4, 80)
         self.tableView.setColumnWidth(5, 100)
-
-        assets_infos = [
-        ]
-        assets_infos += assets_infos
-        for i, asset_info in enumerate(assets_infos):
-            for j in range(6):
-                self.tableView.setItem(i, j, QtWidgets.QTableWidgetItem(asset_info[j]))
-
-        self.setStyleSheet("Demo{background: rgb(255, 255, 255)} ")
-        self.hBoxLayout.addWidget(self.tableView)
 
 
 class InfoPanel(QtWidgets.QWidget):
@@ -155,7 +161,19 @@ class LoadingPanel(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.vBoxLayout = QtWidgets.QVBoxLayout(self)
+        self.create_buttons()
 
-        self.vBoxLayout.addWidget(qfluentwidgets.PushButton('Load Asset'))
-        self.vBoxLayout.addWidget(qfluentwidgets.PushButton('Load Asset in Maya'))
-        self.vBoxLayout.addWidget(qfluentwidgets.PushButton('Load Asset in Houdini'))
+    def create_buttons(self):
+        load_in_maya_button = qfluentwidgets.PushButton('Load Asset in Maya')
+        load_in_maya_button.clicked.connect(self.load_asset_in_maya)
+        self.vBoxLayout.addWidget(load_in_maya_button)
+
+        load_in_houdini_button = qfluentwidgets.PushButton('Load Asset in Houdini')
+        load_in_houdini_button.clicked.connect(self.load_asset_in_houdini)
+        self.vBoxLayout.addWidget(load_in_houdini_button)
+
+    def load_asset_in_maya(self):
+        pass
+
+    def load_asset_in_houdini(self):
+        pass
