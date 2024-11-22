@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <!-- Software Paths -->
+    <software>
+        <maya>
+            <path>C:\Program Files\Autodesk\Maya2025\bin\maya.exe</path>
+            <version>2025</version>
+        </maya>
+        <houdini>
+            <path>C:\Program Files\Side Effects Software\Houdini 20.0.547\bin\houdini.exe</path>
+            <version>20.0.547</version>
+        </houdini>
+    </software>
+</config>

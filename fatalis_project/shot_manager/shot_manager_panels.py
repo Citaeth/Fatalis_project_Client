@@ -5,7 +5,7 @@ import qfluentwidgets
 from fatalis_project.ui_utils import ui_panels
 
 
-class TreePanel(ui_panels.TreePanel):
+class ShotTreePanel(ui_panels.TreePanel):
     def fill_tree(self):
         item1 = QtWidgets.QTreeWidgetItem([self.tr('Shots -')])
         item11 = QtWidgets.QTreeWidgetItem([self.tr('FXs')])
@@ -19,7 +19,7 @@ class TreePanel(ui_panels.TreePanel):
         self.tree.addTopLevelItem(item1)
 
 
-class TaskFilterPanel(QtWidgets.QWidget):
+class ShotTaskFilterPanel(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
 
@@ -46,7 +46,7 @@ class TaskFilterPanel(QtWidgets.QWidget):
         self.hBoxLayout.addWidget(self.listWidget)
 
 
-class FilterBarPanel(QtWidgets.QWidget):
+class ShotFilterBarPanel(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.setStyleSheet("Demo {background: rgb(32, 32, 32)}")
@@ -83,7 +83,7 @@ class FilterBarPanel(QtWidgets.QWidget):
         self.lineEdit.setPlaceholderText('Search stand')
 
 
-class MainTablePanel(QtWidgets.QWidget):
+class ShotMainTablePanel(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         # setTheme(Theme.DARK)
@@ -118,7 +118,7 @@ class MainTablePanel(QtWidgets.QWidget):
         self.hBoxLayout.addWidget(self.tableView)
 
 
-class InfoPanel(QtWidgets.QWidget):
+class ShotInfoPanel(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.hBoxLayout = QtWidgets.QHBoxLayout(self)
@@ -141,7 +141,7 @@ class InfoPanel(QtWidgets.QWidget):
         self.hBoxLayout.addWidget(self.tableView)
 
 
-class LoadingPanel(QtWidgets.QWidget):
+class ShotLoadingPanel(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.vBoxLayout = QtWidgets.QVBoxLayout(self)

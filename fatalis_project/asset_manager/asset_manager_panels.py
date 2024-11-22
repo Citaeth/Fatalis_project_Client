@@ -1,11 +1,14 @@
 import sys
 from PySide6 import QtWidgets, QtCore, QtGui
 import qfluentwidgets
+import subprocess
 
-from fatalis_project.ui_utils import ui_panels
+
+import fatalis_project
+from fatalis_project.ui_utils import ui_panels, ui_utils
 
 
-class TreePanel(ui_panels.TreePanel):
+class AssetTreePanel(ui_panels.TreePanel):
     def fill_tree(self):
         item1 = QtWidgets.QTreeWidgetItem([self.tr('Assets - ')])
         item1.addChildren([
@@ -16,7 +19,7 @@ class TreePanel(ui_panels.TreePanel):
         self.tree.addTopLevelItem(item1)
 
 
-class TaskFilterPanel(QtWidgets.QWidget):
+class AssetTaskFilterPanel(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
 
@@ -42,7 +45,7 @@ class TaskFilterPanel(QtWidgets.QWidget):
         self.hBoxLayout.addWidget(self.listWidget)
 
 
-class FilterBarPanel(QtWidgets.QWidget):
+class AssetFilterBarPanel(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.setStyleSheet("Demo {background: rgb(32, 32, 32)}")
@@ -79,7 +82,7 @@ class FilterBarPanel(QtWidgets.QWidget):
         self.lineEdit.setPlaceholderText('Search stand')
 
 
-class MainTablePanel(QtWidgets.QWidget):
+class AssetMainTablePanel(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         # setTheme(Theme.DARK)
@@ -114,7 +117,7 @@ class MainTablePanel(QtWidgets.QWidget):
         self.hBoxLayout.addWidget(self.tableView)
 
 
-class InfoPanel(QtWidgets.QWidget):
+class AssetInfoPanel(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.hBoxLayout = QtWidgets.QHBoxLayout(self)
@@ -137,10 +140,42 @@ class InfoPanel(QtWidgets.QWidget):
         self.hBoxLayout.addWidget(self.tableView)
 
 
-class LoadingPanel(QtWidgets.QWidget):
+class AssetLoadingPanel(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.vBoxLayout = QtWidgets.QVBoxLayout(self)
 
-        self.vBoxLayout.addWidget(qfluentwidgets.PushButton('Load Asset in Maya'))
-        self.vBoxLayout.addWidget(qfluentwidgets.PushButton('Load Asset in Houdini'))
+        load_in_maya_button=qfluentwidgets.PushButton('Load Asset in Maya')
+        load_in_maya_button.clicked.connect(self.load_asset_in_maya)
+        self.vBoxLayout.addWidget(load_in_maya_button)
+
+        load_in_houdini_button = qfluentwidgets.PushButton('Load Asset in Houdini')
+        load_in_houdini_button.clicked.connect(self.load_asset_in_houdini)
+        self.vBoxLayout.addWidget(load_in_houdini_button)
+
+    def load_asset_in_maya(self):
+        print('Loading Asset in Maya')
+
+        user_config = ui_utils.get_user_config_file()
+        maya_path = user_config.find('./software/maya/path').text
+
+        try:
+            subprocess.Popen([maya_path])
+        except FileNotFoundError:
+            print("the maya path is wrong, please check it.")
+        except Exception as e:
+            print(f"error during launching maya : {e}")
+
+
+    def load_asset_in_houdini(self):
+        print('Loading Asset in Houdini')
+
+        user_config = ui_utils.get_user_config_file()
+        houdini_path = user_config.find('./software/houdini/path').text
+
+        try:
+            subprocess.Popen([houdini_path])
+        except FileNotFoundError:
+            print("the houdini path is wrong, please check it.")
+        except Exception as e:
+            print(f"error during launching houdini : {e}")
