@@ -1,5 +1,4 @@
 import qfluentwidgets
-
 from fatalis_project.fatalis_manager_main.asset_manager import asset_manager_panels
 
 

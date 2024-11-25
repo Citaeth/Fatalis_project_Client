@@ -5,7 +5,7 @@ from fatalis_project.fatalis_manager_main.asset_manager import asset_manager_uti
 
 class AssetManagerApplication(QtWidgets.QWidget):
     """
-
+    AssetManagerApplication build the layout/widgets contained in the AssetManagerInterface.
     """
     def __init__(self, parent=None):
         super(AssetManagerApplication, self).__init__(parent=None)
@@ -15,6 +15,9 @@ class AssetManagerApplication(QtWidgets.QWidget):
         self.fill_tabs()
 
     def fill_tabs(self):
+        """
+        create the tabs of widgets who would be shown in the AssetManagerInterface.
+        """
         tabs = asset_manager_utils.create_tab()
         for each_tab in tabs:
             self.asset_manager_layout.addWidget(each_tab[0])

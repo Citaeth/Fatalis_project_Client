@@ -1,4 +1,4 @@
-from PySide6 import QtWidgets, QtCore
+from PySide6 import QtWidgets
 import qfluentwidgets
 
 from fatalis_project.fatalis_manager_main.shot_manager import shot_manager_panels

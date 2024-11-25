@@ -2,7 +2,7 @@ from PySide6 import QtWidgets
 import qfluentwidgets
 import subprocess
 
-from fatalis_project.ui_utils import ui_panels, ui_utils
+from fatalis_project.ui_utils import ui_panels, utils
 
 
 class ShotTreePanel(ui_panels.TreePanel):
@@ -62,7 +62,7 @@ class ShotLoadingPanel(ui_panels.LoadingPanel):
         self.vBoxLayout.addWidget(load_in_houdini_button)
 
     def load_asset_in_maya(self):
-        user_config = ui_utils.get_user_config_file()
+        user_config = utils.get_user_config_file()
         maya_path = user_config.find('./software/maya/path').text
 
         try:
@@ -73,7 +73,7 @@ class ShotLoadingPanel(ui_panels.LoadingPanel):
             print(f"error during launching maya : {e}")
 
     def load_asset_in_houdini(self):
-        user_config = ui_utils.get_user_config_file()
+        user_config = utils.get_user_config_file()
         houdini_path = user_config.find('./software/houdini/path').text
 
         try:

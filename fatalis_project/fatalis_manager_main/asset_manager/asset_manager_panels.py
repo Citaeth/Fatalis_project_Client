@@ -2,7 +2,7 @@ from PySide6 import QtWidgets
 import qfluentwidgets
 import subprocess
 
-from fatalis_project.ui_utils import ui_panels, ui_utils
+from fatalis_project.ui_utils import ui_panels, utils, publisher_main
 
 
 class AssetTreePanel(ui_panels.TreePanel):
@@ -52,6 +52,10 @@ class AssetLoadingPanel(ui_panels.LoadingPanel):
 
     """
     def create_buttons(self):
+        download_button = qfluentwidgets.PushButton('Dowmload File / Folder')
+        download_button.clicked.connect(self.download_folder_file)
+        self.vBoxLayout.addWidget(download_button)
+
         load_in_maya_button = qfluentwidgets.PushButton('Load Asset in Maya')
         load_in_maya_button.clicked.connect(self.load_asset_in_maya)
         self.vBoxLayout.addWidget(load_in_maya_button)
@@ -60,9 +64,16 @@ class AssetLoadingPanel(ui_panels.LoadingPanel):
         load_in_houdini_button.clicked.connect(self.load_asset_in_houdini)
         self.vBoxLayout.addWidget(load_in_houdini_button)
 
+        publish_on_server_button = qfluentwidgets.PushButton('Publish on server')
+        publish_on_server_button.clicked.connect(publisher_main.open_publisher)
+        self.vBoxLayout.addWidget(publish_on_server_button)
+
+
+    def download_folder_file(self):
+        pass
 
     def load_asset_in_maya(self):
-        user_config = ui_utils.get_user_config_file()
+        user_config = utils.get_user_config_file()
         maya_path = user_config.find('./software/maya/path').text
 
         try:
@@ -74,7 +85,7 @@ class AssetLoadingPanel(ui_panels.LoadingPanel):
 
 
     def load_asset_in_houdini(self):
-        user_config = ui_utils.get_user_config_file()
+        user_config = utils.get_user_config_file()
         houdini_path = user_config.find('./software/houdini/path').text
 
         try:

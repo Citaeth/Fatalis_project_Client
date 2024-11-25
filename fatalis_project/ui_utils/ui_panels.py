@@ -4,6 +4,11 @@ import qfluentwidgets
 
 
 class TreePanel(QtWidgets.QFrame):
+    """
+    Base instance of the ThreePanel Widget, used to show the hierarchy of the project to filter the folder/asset
+    in the main tab UI.
+    This class should be overridden by subclasses depending on the software or if we are in asset or shot context.
+    """
     def __init__(self, enable_check=False):
         super().__init__()
         self.hBoxLayout = QtWidgets.QHBoxLayout(self)
@@ -23,9 +28,17 @@ class TreePanel(QtWidgets.QFrame):
                 it += 1
 
     def fill_tree(self):
+        """
+        Fill the tree depending on what we except in the context. This is the function that should be overridden.
+        """
         pass
 
 class TaskFilterPanel(QtWidgets.QWidget):
+    """
+    Base instance of the TaskFilterPanel Widget, used to show a list of the task of the project to filter elements
+    in the main tab UI.
+    This class should be overridden by subclasses depending on the software or if we are in asset or shot context.
+    """
     def __init__(self):
         super().__init__()
 
@@ -43,6 +56,11 @@ class TaskFilterPanel(QtWidgets.QWidget):
         self.hBoxLayout.addWidget(self.listWidget)
 
     def define_stand(self):
+        """
+        define the stands that we want to use to filter elements in the main tab UI depending on the context.
+        This is the function that should be overridden.
+        :return: list[str] Stands used to filter the tasks.
+        """
         stands = [
             "concept",
             "modeling",
@@ -60,6 +78,10 @@ class TaskFilterPanel(QtWidgets.QWidget):
         return stands
 
 class FilterBarPanel(QtWidgets.QWidget):
+    """
+    Base instance of the FilterBarPanel Widget, used to let the artist filter what he wants in the main tab UI
+    by taping in the filter bar.
+    """
     def __init__(self):
         super().__init__()
         self.setStyleSheet("Demo {background: rgb(32, 32, 32)}")
@@ -68,7 +90,7 @@ class FilterBarPanel(QtWidgets.QWidget):
         self.lineEdit = qfluentwidgets.SearchLineEdit(self)
         self.button = qfluentwidgets.PushButton('Search', self)
 
-        # add completer
+        # add a completer for main words
         stands = [
             "concept",
             "modeling",
@@ -97,15 +119,18 @@ class FilterBarPanel(QtWidgets.QWidget):
 
 
 class MainTablePanel(QtWidgets.QWidget):
+    """
+    Base instance of the MainTablePanel Widget, used to show the list of assets, dpeending on the filters of the user.
+    This class could be overridden by subclasses depending on the software or if we are in asset or shot context if
+    needed.
+    """
     def __init__(self):
         super().__init__()
-        # setTheme(Theme.DARK)
 
         self.hBoxLayout = QtWidgets.QHBoxLayout(self)
         self.tableView = qfluentwidgets.TableWidget(self)
         self.tableView.horizontalHeader().setStretchLastSection(True)
 
-        # enable border
         self.tableView.setBorderVisible(True)
 
         self.define_table_content()
@@ -135,6 +160,11 @@ class MainTablePanel(QtWidgets.QWidget):
 
 
 class InfoPanel(QtWidgets.QWidget):
+    """
+    Base instance of the InfoPanel Widget, used to show details of the asset selected by the user in the MainTablePanel.
+    This class could be overridden by subclasses depending on the software or if we are in asset or shot context if
+    needed.
+    """
     def __init__(self):
         super().__init__()
         self.hBoxLayout = QtWidgets.QHBoxLayout(self)
@@ -151,29 +181,24 @@ class InfoPanel(QtWidgets.QWidget):
 
                 et pleeeeins d'autres ensuite."""
 
-        # Définir le texte dans le QTextEdit
         self.tableView.setPlainText(complex_text)
-
         self.hBoxLayout.addWidget(self.tableView)
 
 
 class LoadingPanel(QtWidgets.QWidget):
+    """
+    Base instance of the LoadingPanel Widget, used to add buttons to deal with the elements on the server, for exemple
+    to download file/folder, open the selected asset in maya, houdini, or open a Publisher UI.
+    This class should be overridden by subclasses depending on the software or if we are in asset or shot context if
+    needed.
+    """
     def __init__(self):
         super().__init__()
         self.vBoxLayout = QtWidgets.QVBoxLayout(self)
         self.create_buttons()
 
     def create_buttons(self):
-        load_in_maya_button = qfluentwidgets.PushButton('Load Asset in Maya')
-        load_in_maya_button.clicked.connect(self.load_asset_in_maya)
-        self.vBoxLayout.addWidget(load_in_maya_button)
-
-        load_in_houdini_button = qfluentwidgets.PushButton('Load Asset in Houdini')
-        load_in_houdini_button.clicked.connect(self.load_asset_in_houdini)
-        self.vBoxLayout.addWidget(load_in_houdini_button)
-
-    def load_asset_in_maya(self):
-        pass
-
-    def load_asset_in_houdini(self):
+        """
+        create the buttons and add it to the LoadingPanel Widget.
+        """
         pass

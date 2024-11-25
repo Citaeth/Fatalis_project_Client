@@ -1,5 +1,3 @@
-import sys
-from PySide6 import QtWidgets
 import qfluentwidgets
 
 from fatalis_project.fatalis_manager_main import fatalis_manager_main
@@ -8,6 +6,7 @@ from fatalis_project.maya.shot_manager_maya.shot_manager_maya_ui import ShotMana
 
 from fatalis_project.reference_gallery.reference_gallery_ui import ReferenceGalleryInterface
 
+
 class FatalisManagerMaya(fatalis_manager_main.FatalisManagerMain):
     """
     Maya version of the Fatalis Project Manager UI.
@@ -15,6 +14,9 @@ class FatalisManagerMaya(fatalis_manager_main.FatalisManagerMain):
     """
 
     def add_navigations_interface(self):
+        """
+        add the interface tabs to the FluentWindow. It creates one tabs at the right for each new subInterface.
+        """
         self.navigationInterface.addSeparator()
         self.asset_manager_interface = AssetManagerInterfaceMaya(self)
         self.addSubInterface(self.asset_manager_interface, text='Asset Manager', icon=qfluentwidgets.FluentIcon.FOLDER)
@@ -33,11 +35,9 @@ class FatalisManagerMaya(fatalis_manager_main.FatalisManagerMain):
 
         self.navigationInterface.setExpandWidth(200)
 
-if __name__ == '__main__':
+def open_maya_fatalis_manager():
     """
     loading the UI when calling the file.
     """
-    app = QtWidgets.QApplication(sys.argv)
-    w = FatalisManagerMaya()
-    w.show()
-    app.exec()
+    ui = FatalisManagerMaya()
+    ui.show()

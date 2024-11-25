@@ -4,8 +4,12 @@ from fatalis_project.maya.asset_manager_maya import asset_manager_maya_utils
 
 class AssetManagerApplicationMaya(AssetManagerApplication):
     """
+    The AssetManagerApplicationMaya is the iteration of the AssetManagerInterface for Maya.
     """
     def fill_tabs(self):
+        """
+        create the tabs of widgets who would be shown in the AssetManagerInterface in Maya.
+        """
         tabs = asset_manager_maya_utils.create_tab()
         for each_tab in tabs:
             self.asset_manager_layout.addWidget(each_tab[0])
@@ -14,9 +18,7 @@ class AssetManagerApplicationMaya(AssetManagerApplication):
 
 class AssetManagerInterfaceMaya(AssetManagerInterface):
     """
-    The Asset Manager Interface is a Widget who contain the Asset Manager.
-    Should be called in the Fatalis Project main UI. It could be bypassed in the Asset Manager in the software, calling
-    directly the AssetManagerApplication.
+    The Maya AssetManagerInterfaceMaya is the iteration of the AssetManagerInterface for Maya.
     """
     INTERFACE_NAME = 'Asset Manager Interface Maya'
     APPLICATION = AssetManagerApplicationMaya

@@ -5,7 +5,7 @@ from fatalis_project.fatalis_manager_main.shot_manager import shot_manager_utils
 
 class ShotManagerApplication(QtWidgets.QWidget):
     """
-
+    ShotManagerApplication build the layout/widgets contained in the ShotManagerInterface.
     """
     def __init__(self, parent=None):
         super(ShotManagerApplication, self).__init__(parent=None)
@@ -15,6 +15,9 @@ class ShotManagerApplication(QtWidgets.QWidget):
         self.fill_tabs()
 
     def fill_tabs(self):
+        """
+        create the tabs of widgets who would be shown in the ShotManagerInterface.
+        """
         tabs = shot_manager_utils.create_tab()
         for each_tab in tabs:
             self.asset_manager_layout.addWidget(each_tab[0])
