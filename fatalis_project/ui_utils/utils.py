@@ -6,8 +6,8 @@ import fatalis_project
 
 def get_user_config_file():
     """
-
-    :return:
+    get the user config file, located in the fatalis_project.
+    :return root:
     """
     fatalis_project_path = os.path.abspath(fatalis_project.__file__).replace("__init__.py", "")
     config_path = "{}user_config.xml".format(fatalis_project_path)
@@ -17,6 +17,9 @@ def get_user_config_file():
 
 
 class AddUserName(QtWidgets.QDialog):
+    """
+    QDialog to ask the user its name, if it's not already fill in the user_config.xml.
+    """
     def __init__(self):
         super().__init__()
         self.setWindowTitle("What's your name, Darling?")
@@ -38,17 +41,18 @@ class AddUserName(QtWidgets.QDialog):
         self.bouton.accepted.connect(self.accept)
         self.bouton.rejected.connect(self.reject)
 
-    def get_name(self):
-        add_name_to_user_config(self.input_name.text())
-        return self.input_name.text()
-
-
-def add_name_to_user_config(name):
-    fatalis_project_path = os.path.abspath(fatalis_project.__file__).replace("__init__.py", "")
-    config_path = "{}user_config.xml".format(fatalis_project_path)
-    tree = ET.parse(config_path)
-    root = tree.getroot()
-    name_element = root.find("./user/name")
-    if name_element.text is None:
-        name_element.text = name
-    tree.write(config_path, encoding="utf-8", xml_declaration=True)
+    def add_name_to_user_config(self):
+        """
+        normalize the name of the user, and add it to the user_config.xml.
+        :return str: name of the user
+        """
+        user_name_normalize = (self.input_name.text()).replace(" ", "")
+        fatalis_project_path = os.path.abspath(fatalis_project.__file__).replace("__init__.py", "")
+        config_path = "{}user_config.xml".format(fatalis_project_path)
+        tree = ET.parse(config_path)
+        root = tree.getroot()
+        name_element = root.find("./user/name")
+        if name_element.text is None:
+            name_element.text = user_name_normalize
+        tree.write(config_path, encoding="utf-8", xml_declaration=True)
+        return user_name_normalize

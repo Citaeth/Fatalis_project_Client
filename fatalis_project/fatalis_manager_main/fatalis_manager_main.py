@@ -61,7 +61,7 @@ class FatalisManagerMain(qfluentwidgets.FluentWindow):
         if not user_config.find("./user/name").text:
             dialog  = utils.AddUserName()
             if dialog.exec():
-                self.USER=dialog.get_name()
+                self.USER=dialog.add_name_to_user_config()
         else:
             self.USER=user_config.find("./user/name").text
 
