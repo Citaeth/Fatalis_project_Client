@@ -22,6 +22,7 @@ class FatalisManagerMain(qfluentwidgets.FluentWindow):
         qfluentwidgets.setThemeColor("#8e3838", save=False)
 
         self.identify_user()
+        self.read_data_base()
 
         self.add_navigations_interface()
         self.resize(1500, 850)
@@ -64,6 +65,9 @@ class FatalisManagerMain(qfluentwidgets.FluentWindow):
                 self.USER=dialog.add_name_to_user_config()
         else:
             self.USER=user_config.find("./user/name").text
+
+    def read_data_base(self):
+        pass
 
     def force_refresh(self):
         """

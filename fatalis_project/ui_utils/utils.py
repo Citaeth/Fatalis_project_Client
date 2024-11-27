@@ -2,6 +2,7 @@ import os
 from PySide6 import QtWidgets
 import xml.etree.ElementTree as ET
 import fatalis_project
+from fatalis_project.ui_utils.http_request.add_user import add_user_to_database
 
 
 def get_user_config_file():
@@ -55,4 +56,7 @@ class AddUserName(QtWidgets.QDialog):
         if name_element.text is None:
             name_element.text = user_name_normalize
         tree.write(config_path, encoding="utf-8", xml_declaration=True)
+
+        add_user_to_database(user_name_normalize)
+
         return user_name_normalize
