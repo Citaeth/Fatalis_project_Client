@@ -63,6 +63,7 @@ class ShotLoadingPanel(ui_panels.LoadingPanel):
 
     def load_asset_in_maya(self):
         user_config = utils.get_user_config_file()
+        #TODO: make maya_path and houdini path selectable by user at the first start
         maya_path = user_config.find('./software/maya/path').text
 
         try:
