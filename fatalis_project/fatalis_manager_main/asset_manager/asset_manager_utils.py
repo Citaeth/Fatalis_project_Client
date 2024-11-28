@@ -3,7 +3,7 @@ from PySide6 import QtWidgets
 from fatalis_project.fatalis_manager_main.asset_manager import asset_manager_panels as panels
 
 
-def create_tab():
+def create_tab(database_assets_infos):
     """
     create and fill different tabs into the Shot Manager.
     The current function define the tabs for the Asset Manager in the Fatalis Project main UI, and could be
@@ -26,7 +26,9 @@ def create_tab():
     mid_tab_layout = QtWidgets.QVBoxLayout(mid_tab)
     mid_tab.setLayout(mid_tab_layout)
     mid_tab_layout.addWidget(panels.AssetFilterBarPanel())
-    mid_tab_layout.addWidget(panels.AssetMainTablePanel())
+    main_table_widget = panels.AssetMainTablePanel()
+    main_table_widget.update_table_with_asset_database(database_assets_infos)
+    mid_tab_layout.addWidget(main_table_widget)
     mid_tab_layout.setStretch(0, 0)
     mid_tab_layout.setStretch(1, 3)
     tabs.append([mid_tab, 3])

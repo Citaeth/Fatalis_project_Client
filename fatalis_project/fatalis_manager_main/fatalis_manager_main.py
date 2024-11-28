@@ -7,6 +7,7 @@ from fatalis_project.fatalis_manager_main.shot_manager.shot_manager_ui import Sh
 from fatalis_project.reference_gallery.reference_gallery_ui import ReferenceGalleryInterface
 
 from fatalis_project.ui_utils import utils
+from fatalis_project.ui_utils.http_request import read_data_base
 
 class FatalisManagerMain(qfluentwidgets.FluentWindow):
     """
@@ -22,7 +23,7 @@ class FatalisManagerMain(qfluentwidgets.FluentWindow):
         qfluentwidgets.setThemeColor("#8e3838", save=False)
 
         self.identify_user()
-        self.read_data_base()
+        self.asset_data_base = self.read_data_base()
 
         self.add_navigations_interface()
         self.resize(1500, 850)
@@ -67,12 +68,17 @@ class FatalisManagerMain(qfluentwidgets.FluentWindow):
             self.USER=user_config.find("./user/name").text
 
     def read_data_base(self):
-        pass
+        read_data_base.compare_and_update_db()
+        asset_database = read_data_base.get_assets_from_database()
+
+        return asset_database
 
     def force_refresh(self):
         """
         refresh the content of the UI, using the data on the server.
         """
+        asset_database = self.read_data_base()
+        # self.
         pass
 
 

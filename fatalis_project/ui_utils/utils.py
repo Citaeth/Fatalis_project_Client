@@ -3,7 +3,8 @@ from PySide6 import QtWidgets
 import xml.etree.ElementTree as ET
 import fatalis_project
 from fatalis_project.ui_utils.http_request.add_user import add_user_to_database
-
+import zipfile
+import tempfile
 
 def get_user_config_file():
     """
@@ -16,6 +17,12 @@ def get_user_config_file():
     root = tree.getroot()
     return root
 
+def get_project_users_config_file():
+    fatalis_project_path = os.path.abspath(fatalis_project.__file__).replace("__init__.py", "")
+    config_path = "{}users.xml".format(fatalis_project_path)
+    tree = ET.parse(config_path)
+    root = tree.getroot()
+    return config_path, root
 
 class AddUserName(QtWidgets.QDialog):
     """
@@ -60,3 +67,17 @@ class AddUserName(QtWidgets.QDialog):
         add_user_to_database(user_name_normalize)
 
         return user_name_normalize
+
+
+def convert_files_group_to_zip(files):
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".zip") as temp_zip:
+            zip_path = temp_zip.name
+            with zipfile.ZipFile(temp_zip, 'w') as zipf:
+                for file_path in files:
+                    if os.path.isfile(file_path):
+                        zipf.write(file_path, os.path.basename(file_path))
+            temp_zip.close()
+        return zip_path
+    except Exception as e:
+        return "Convert to zip error: {}".format(e)

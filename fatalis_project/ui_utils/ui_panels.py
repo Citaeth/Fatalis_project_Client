@@ -90,7 +90,6 @@ class FilterBarPanel(QtWidgets.QWidget):
         self.lineEdit = qfluentwidgets.SearchLineEdit(self)
         self.button = qfluentwidgets.PushButton('Search', self)
 
-        # add a completer for main words
         stands = [
             "concept",
             "modeling",
@@ -134,30 +133,25 @@ class MainTablePanel(QtWidgets.QWidget):
         self.tableView.setBorderVisible(True)
 
         self.define_table_content()
-
-        assets_infos = [
-        ]
-        assets_infos += assets_infos
-        for i, asset_info in enumerate(assets_infos):
-            for j in range(6):
-                self.tableView.setItem(i, j, QtWidgets.QTableWidgetItem(asset_info[j]))
-
         self.setStyleSheet("Demo{background: rgb(255, 255, 255)} ")
         self.hBoxLayout.addWidget(self.tableView)
 
     def define_table_content(self):
         self.tableView.setRowCount(60)
-        self.tableView.setColumnCount(6)
+        self.tableView.setColumnCount(7)
         self.tableView.verticalHeader().hide()
-        self.tableView.setHorizontalHeaderLabels(['Asset', 'Type', 'Version', 'Owner', 'Date', 'Infos'])
+        self.tableView.setHorizontalHeaderLabels(['Asset Name', '.ext', 'Task', 'Version', 'Owner', 'Date', 'Infos'])
 
         self.tableView.setColumnWidth(0, 250)
-        self.tableView.setColumnWidth(1, 100)
-        self.tableView.setColumnWidth(2, 65)
-        self.tableView.setColumnWidth(3, 100)
-        self.tableView.setColumnWidth(4, 80)
-        self.tableView.setColumnWidth(5, 100)
+        self.tableView.setColumnWidth(1, 65)
+        self.tableView.setColumnWidth(2, 100)
+        self.tableView.setColumnWidth(3, 65)
+        self.tableView.setColumnWidth(4, 100)
+        self.tableView.setColumnWidth(5, 80)
+        self.tableView.setColumnWidth(6, 100)
 
+    def fill_asset_list(self):
+        pass
 
 class InfoPanel(QtWidgets.QWidget):
     """
