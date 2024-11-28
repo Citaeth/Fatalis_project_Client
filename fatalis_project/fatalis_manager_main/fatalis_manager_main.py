@@ -27,7 +27,6 @@ class FatalisManagerMain(qfluentwidgets.FluentWindow):
 
         self.add_navigations_interface()
         self.resize(1750, 850)
-        self.force_refresh()
 
 
     def add_navigations_interface(self):
@@ -77,8 +76,6 @@ class FatalisManagerMain(qfluentwidgets.FluentWindow):
         """
         refresh the content of the UI, using the data on the server.
         """
-        #asset_database = self.read_data_base()
-        # self.
         pass
 
 

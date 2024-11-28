@@ -109,7 +109,7 @@ def apply_filters_on_main_table(asset_filter, task_filter, main_table_widget):
         if main_table_widget.tableView.item(row + 1, 0) is None:
             break
 
-def download_files(table_widget, database_assets_infos):
+def download_files(table_widget):
     selected_items = table_widget.tableView.selectedItems()
     if not selected_items:
         dlg = QtWidgets.QMessageBox()
