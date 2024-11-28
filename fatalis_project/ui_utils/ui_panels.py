@@ -5,7 +5,7 @@ import qfluentwidgets
 
 class TreePanel(QtWidgets.QFrame):
     """
-    Base instance of the ThreePanel Widget, used to show the hierarchy of the project to filter the folder/asset
+    Base instance of the ThreePanel Widget, used to show the hierarchy of the project to filter the asset/shots
     in the main tab UI.
     This class should be overridden by subclasses depending on the software or if we are in asset or shot context.
     """
@@ -62,18 +62,18 @@ class TaskFilterPanel(QtWidgets.QWidget):
         :return: list[str] Stands used to filter the tasks.
         """
         stands = [
-            "concept",
-            "modeling",
-            "texturing",
-            "lookdev",
-            "rigging",
-            "layout",
-            "animation",
-            "lighting",
-            "matte",
-            "compositing",
-            "editing",
-            "youping",
+            "Concept",
+            "Modeling",
+            "Texturing",
+            "Lookdev",
+            "Rigging",
+            "Layout",
+            "Animation",
+            "Lighting",
+            "Matte",
+            "Compositing",
+            "Editing",
+            "Youping",
         ]
         return stands
 
@@ -129,6 +129,8 @@ class MainTablePanel(QtWidgets.QWidget):
         self.hBoxLayout = QtWidgets.QHBoxLayout(self)
         self.tableView = qfluentwidgets.TableWidget(self)
         self.tableView.horizontalHeader().setStretchLastSection(True)
+        self.tableView.setSelectionMode(QtWidgets.QTableWidget.SelectionMode.SingleSelection)
+        self.tableView.setSortingEnabled(True)
 
         self.tableView.setBorderVisible(True)
 

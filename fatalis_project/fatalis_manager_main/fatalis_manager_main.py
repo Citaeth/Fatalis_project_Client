@@ -77,7 +77,7 @@ class FatalisManagerMain(qfluentwidgets.FluentWindow):
         """
         refresh the content of the UI, using the data on the server.
         """
-        asset_database = self.read_data_base()
+        #asset_database = self.read_data_base()
         # self.
         pass
 

@@ -18,13 +18,13 @@ class AssetTreePanel(ui_panels.TreePanel):
 class AssetTaskFilterPanel(ui_panels.TaskFilterPanel):
     def define_stand(self):
         stands = [
-            "concept",
-            "modeling",
-            "texturing",
-            "lookdev",
-            "rigging",
-            "matte",
-            "youping",
+            "Concept",
+            "Modeling",
+            "Texturing",
+            "Lookdev",
+            "Rigging",
+            "Matte",
+            "Youping",
         ]
         return stands
 
@@ -69,7 +69,8 @@ class AssetInfoPanel(ui_panels.InfoPanel):
     """
 
     """
-
+    def fill_asset_infos(self):
+        pass
 
 class AssetLoadingPanel(ui_panels.LoadingPanel):
     """
