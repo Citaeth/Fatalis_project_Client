@@ -26,7 +26,7 @@ class FatalisManagerMain(qfluentwidgets.FluentWindow):
         self.asset_data_base = self.read_data_base()
 
         self.add_navigations_interface()
-        self.resize(1500, 850)
+        self.resize(1750, 850)
         self.force_refresh()
 
 

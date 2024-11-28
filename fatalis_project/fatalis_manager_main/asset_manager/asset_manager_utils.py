@@ -1,6 +1,7 @@
 from PySide6 import QtWidgets, QtCore
-
+import textwrap
 from fatalis_project.fatalis_manager_main.asset_manager import asset_manager_panels as panels
+from fatalis_project.ui_utils.http_request import download_main
 
 
 def create_tab(database_assets_infos):
@@ -18,7 +19,9 @@ def create_tab(database_assets_infos):
     right_tab.setLayout(right_tab_layout)
     info_widget = panels.AssetInfoPanel()
     right_tab_layout.addWidget(info_widget)
-    right_tab_layout.addWidget(panels.AssetLoadingPanel())
+    load_buttons_widget = panels.AssetLoadingPanel()
+    load_buttons_widget.download_button.clicked.connect(lambda:download_files(main_table_widget, database_assets_infos))
+    right_tab_layout.addWidget(load_buttons_widget)
     right_tab_layout.setStretch(0, 1)
 
     # Mid tab, created before because the Left tab is supposed to contain filter widget for the main table in the mid.
@@ -63,13 +66,14 @@ def fill_info_selected_in_table(table_widget, info_widget):
     if selected_items:
         selected_row = selected_items[0].row()  # Obtenir l'index de la ligne sélectionnée
         row_data = [table_widget.tableView.item(selected_row, col).text() for col in range(table_widget.tableView.columnCount())]
-        infos = """{};
-                Task: {}; Version: {};
-                File type: {};
-                owner: {};
-                date: {};
-                   
-                infos: {};""".format(row_data[0], row_data[2], row_data[3], row_data[1], row_data[4], row_data[5], row_data[6])
+        infos = textwrap.dedent(f"""\
+        {row_data[0]};
+        Task: {row_data[2]}; Version: {row_data[3]};
+        File type: {row_data[1]};
+        Owner: {row_data[4]};
+        Date: {row_data[5]};
+
+        Infos: {row_data[6]};""")
         info_widget.tableView.setPlainText(infos)
 
 
@@ -104,3 +108,22 @@ def apply_filters_on_main_table(asset_filter, task_filter, main_table_widget):
             main_table_widget.tableView.setRowHidden(row, True)
         if main_table_widget.tableView.item(row + 1, 0) is None:
             break
+
+def download_files(table_widget, database_assets_infos):
+    selected_items = table_widget.tableView.selectedItems()
+    if not selected_items:
+        dlg = QtWidgets.QMessageBox()
+        dlg.setWindowTitle('Download Issue')
+        dlg.setText("Please select something to download in the table!")
+        button = dlg.exec()
+
+        if button == QtWidgets.QMessageBox.Ok:
+            print('OK!')
+            return
+    dest_folder_widget=QtWidgets.QWidget()
+    folder = QtWidgets.QFileDialog.getExistingDirectory(dest_folder_widget, "Select Download Directory")
+    if folder:
+        download_path = folder
+        selected_row = selected_items[0].row()
+        asset_id = table_widget.tableView.item(selected_row, 7).text()
+        download_main.download_from_server(asset_id, download_path)

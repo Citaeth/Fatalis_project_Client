@@ -44,7 +44,6 @@ class PublisherApplication(QtWidgets.QWidget):
         self.build_path_tab()
         self.build_info_publish_tab()
 
-
     def build_name_task_tab(self):
 
         asset_name_list = self.CONFIG.find('./assets/name').text.split(", ")
@@ -127,10 +126,6 @@ class PublisherApplication(QtWidgets.QWidget):
         else:
             upload_to_server(path, asset_version_name, asset_name, asset_task, user_name, infos)
 
-
-
-
-
     def publish_missing_infos_dialog(self, message):
         dlg = QtWidgets.QMessageBox(self)
         dlg.setWindowTitle('Publish issue, missing information')
@@ -139,6 +134,7 @@ class PublisherApplication(QtWidgets.QWidget):
 
         if button == QtWidgets.QMessageBox.Ok:
             print('OK!')
+
 
 class PublisherInterface(qfluentwidgets.SingleDirectionScrollArea):
     """
@@ -163,6 +159,7 @@ class PublisherInterface(qfluentwidgets.SingleDirectionScrollArea):
 
         self.setStyleSheet('QScrollArea {border: none; background:transparent}')
         self.view.setStyleSheet('QWidget {background:transparent}')
+
 
 def open_publisher():
     if PublishWindow.INTERFACE_INSTANCE:

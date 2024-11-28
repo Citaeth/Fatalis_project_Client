@@ -44,7 +44,8 @@ class AssetMainTablePanel(ui_panels.MainTablePanel):
         'version': 3,
         'user_id': 4,
         'created_at': 5,
-        'description': 6
+        'description': 6,
+        'id':7
     }
 
     def update_table_with_asset_database(self, database_assets_infos):
@@ -69,17 +70,15 @@ class AssetInfoPanel(ui_panels.InfoPanel):
     """
 
     """
-    def fill_asset_infos(self):
-        pass
+
 
 class AssetLoadingPanel(ui_panels.LoadingPanel):
     """
 
     """
     def create_buttons(self):
-        download_button = qfluentwidgets.PushButton('Dowmload File / Folder')
-        download_button.clicked.connect(self.download_folder_file)
-        self.vBoxLayout.addWidget(download_button)
+        self.download_button = qfluentwidgets.PushButton('Dowmload File / Folder')
+        self.vBoxLayout.addWidget(self.download_button)
 
         load_in_maya_button = qfluentwidgets.PushButton('Load Asset in Maya')
         load_in_maya_button.clicked.connect(self.load_asset_in_maya)

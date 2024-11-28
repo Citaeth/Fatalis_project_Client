@@ -140,17 +140,19 @@ class MainTablePanel(QtWidgets.QWidget):
 
     def define_table_content(self):
         self.tableView.setRowCount(60)
-        self.tableView.setColumnCount(7)
+        self.tableView.setColumnCount(8)
         self.tableView.verticalHeader().hide()
-        self.tableView.setHorizontalHeaderLabels(['Asset Name', '.ext', 'Task', 'Version', 'Owner', 'Date', 'Infos'])
+        self.tableView.setHorizontalHeaderLabels(['Asset Name', '.ext', 'Task', 'Version', 'Owner', 'Date', 'Infos', 'asset_id'])
 
-        self.tableView.setColumnWidth(0, 250)
+        self.tableView.setColumnWidth(0, 200)
         self.tableView.setColumnWidth(1, 65)
         self.tableView.setColumnWidth(2, 100)
-        self.tableView.setColumnWidth(3, 65)
+        self.tableView.setColumnWidth(3, 100)
         self.tableView.setColumnWidth(4, 100)
         self.tableView.setColumnWidth(5, 80)
         self.tableView.setColumnWidth(6, 100)
+        self.tableView.setColumnWidth(7, 10)
+        self.tableView.setColumnHidden(7, True)
 
     def fill_asset_list(self):
         pass
