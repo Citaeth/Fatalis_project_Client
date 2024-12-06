@@ -1,4 +1,5 @@
 import os
+import sys
 from PySide6 import QtWidgets
 import xml.etree.ElementTree as ET
 import fatalis_project
@@ -6,20 +7,41 @@ from fatalis_project.ui_utils.http_request.add_user import add_user_to_database
 import zipfile
 import tempfile
 
+
 def get_user_config_file():
     """
-    get the user config file, located in the fatalis_project.
+    Get the user config file, located in the fatalis_project.
+    Handles both regular execution and PyInstaller execution.
     :return root:
     """
-    fatalis_project_path = os.path.abspath(fatalis_project.__file__).replace("__init__.py", "")
-    config_path = "{}user_config.xml".format(fatalis_project_path)
+    config_path = get_user_config_file_path()
+    if not os.path.exists(config_path):
+        raise FileNotFoundError(f"{config_path} not found")
+
     tree = ET.parse(config_path)
     root = tree.getroot()
     return root
 
+def get_user_config_file_path():
+    if getattr(sys, 'frozen', False):
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.abspath(fatalis_project.__file__).replace("__init__.py", "")
+
+    config_path = os.path.join(base_path, "user_config.xml")
+    return config_path
+
 def get_project_users_config_file():
-    fatalis_project_path = os.path.abspath(fatalis_project.__file__).replace("__init__.py", "")
-    config_path = "{}users.xml".format(fatalis_project_path)
+    if getattr(sys, 'frozen', False):
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.abspath(fatalis_project.__file__).replace("__init__.py", "")
+
+    config_path = os.path.join(base_path, "users.xml")
+
+    if not os.path.exists(config_path):
+        raise FileNotFoundError(f"{config_path} not found")
+
     tree = ET.parse(config_path)
     root = tree.getroot()
     return config_path, root
@@ -55,10 +77,9 @@ class AddUserName(QtWidgets.QDialog):
         :return str: name of the user
         """
         user_name_normalize = (self.input_name.text()).replace(" ", "")
-        fatalis_project_path = os.path.abspath(fatalis_project.__file__).replace("__init__.py", "")
-        config_path = "{}user_config.xml".format(fatalis_project_path)
+        config_path = get_user_config_file_path()
         tree = ET.parse(config_path)
-        root = tree.getroot()
+        root = get_user_config_file()
         name_element = root.find("./user/name")
         if name_element.text is None:
             name_element.text = user_name_normalize

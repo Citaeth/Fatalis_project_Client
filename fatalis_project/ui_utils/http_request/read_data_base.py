@@ -1,5 +1,4 @@
 import requests
-from datetime import datetime
 import xml.etree.ElementTree as ET
 from fatalis_project.ui_utils import utils
 
@@ -81,7 +80,7 @@ def save_to_xml(users, xml_file):
     for user in users:
         user_element = ET.SubElement(root, "User")
 
-        ET.SubElement(user_element, "ID").text = (user['id'])
+        ET.SubElement(user_element, "ID").text = str(user['id'])
         ET.SubElement(user_element, "Username").text = user['username']
 
     tree = ET.ElementTree(root)

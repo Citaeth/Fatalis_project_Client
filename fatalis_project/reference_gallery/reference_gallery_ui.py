@@ -1,5 +1,6 @@
 import os
-from PySide6 import QtWidgets, QtCore, QtGui
+import sys
+from PySide6 import QtWidgets, QtGui
 import qfluentwidgets
 
 class ReferenceGalleryInterface(qfluentwidgets.SingleDirectionScrollArea):
@@ -43,8 +44,13 @@ class ReferenceGalleryApplication(qfluentwidgets.HeaderCardWidget):
 
     @staticmethod
     def get_resources_images():
-        script_dir = os.path.dirname(os.path.abspath(__file__))
+        if getattr(sys, 'frozen', False):
+            script_dir = sys._MEIPASS
+        else:
+            script_dir = os.path.dirname(os.path.abspath(__file__))
         resources_dir = os.path.join(script_dir, 'resources')
+        if not os.path.isdir(resources_dir):
+            raise FileNotFoundError(f"Le dossier {resources_dir} est introuvable.")
 
         valid_extensions = {'.jpg', '.jpeg', '.png', '.bmp', '.gif'}
         images = [
