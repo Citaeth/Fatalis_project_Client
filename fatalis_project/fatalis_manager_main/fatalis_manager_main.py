@@ -37,10 +37,10 @@ class FatalisManagerMain(qfluentwidgets.FluentWindow):
         self.asset_manager_interface = AssetManagerInterface(self)
         self.addSubInterface(self.asset_manager_interface, text='Asset Manager', icon=qfluentwidgets.FluentIcon.FOLDER)
 
-        self.shot_manager_interface = ShotManagerInterface(self)
-        self.addSubInterface(self.shot_manager_interface,
-                             text='Shot Manager',
-                             icon=qfluentwidgets.FluentIcon.VIDEO)
+        # self.shot_manager_interface = ShotManagerInterface(self)
+        # self.addSubInterface(self.shot_manager_interface,
+        #                      text='Shot Manager',
+        #                      icon=qfluentwidgets.FluentIcon.VIDEO)
 
         self.references_gallery = ReferenceGalleryInterface(self)
         self.addSubInterface(self.references_gallery,
