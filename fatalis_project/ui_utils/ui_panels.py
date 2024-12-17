@@ -1,6 +1,12 @@
+import os
+import glob
+import re
 from PySide6 import QtWidgets, QtCore
 import qfluentwidgets
+from win32com.client import Dispatch
+from functools import partial
 
+from fatalis_project.ui_utils import utils
 
 class TreePanel(QtWidgets.QFrame):
     """
@@ -137,24 +143,61 @@ class MainTablePanel(QtWidgets.QWidget):
         self.setStyleSheet("Demo{background: rgb(255, 255, 255)} ")
         self.hBoxLayout.addWidget(self.tableView)
 
+        self.tableView.setContextMenuPolicy(QtCore.Qt.ContextMenuPolicy.CustomContextMenu)
+        self.tableView.customContextMenuRequested.connect(self.open_context_menu)
+
     def define_table_content(self):
         self.tableView.setRowCount(60)
-        self.tableView.setColumnCount(8)
+        self.tableView.setColumnCount(9)
         self.tableView.verticalHeader().hide()
-        self.tableView.setHorizontalHeaderLabels(['Asset Name', '.ext', 'Task', 'Version', 'Owner', 'Date', 'Infos', 'asset_id'])
+        self.tableView.setHorizontalHeaderLabels(['Asset Name', '.ext', 'Task', 'Version', 'Owner', 'Date', 'Infos', 'asset_id', 'status'])
 
         self.tableView.setColumnWidth(0, 200)
         self.tableView.setColumnWidth(1, 65)
         self.tableView.setColumnWidth(2, 100)
-        self.tableView.setColumnWidth(3, 100)
+        self.tableView.setColumnWidth(3, 80)
         self.tableView.setColumnWidth(4, 100)
-        self.tableView.setColumnWidth(5, 80)
+        self.tableView.setColumnWidth(5, 150)
         self.tableView.setColumnWidth(6, 100)
+        self.tableView.setColumnHidden(6, True)
         self.tableView.setColumnWidth(7, 10)
         self.tableView.setColumnHidden(7, True)
+        self.tableView.setColumnWidth(8, 50)
 
     def fill_asset_list(self):
         pass
+
+    def open_context_menu(self, position):
+
+        index = self.tableView.indexAt(position)
+        if not index.isValid():
+            return
+
+        row = index.row()
+        row_data = [self.tableView.item(row, col).text() for col in range(self.tableView.columnCount())]
+
+        menu = QtWidgets.QMenu(self)
+
+        action_refresh = menu.addAction("Refresh Table")
+
+        status_submenu = menu.addMenu("Change Status")
+        action_refresh.triggered.connect(self.refresh_table)
+
+        config = utils.get_user_config_file()[0]
+        status_name_list = config.find('./assets/status').text.split(", ")
+
+        for each_status in status_name_list:
+            action = status_submenu.addAction(each_status)
+            action.triggered.connect(partial(self.change_status, row_data[7], each_status))
+
+        menu.exec(self.tableView.mapToGlobal(position))
+
+    def refresh_table(self):
+        pass
+
+    def change_status(self, asset_id, status):
+        pass
+
 
 class InfoPanel(QtWidgets.QWidget):
     """
@@ -199,3 +242,60 @@ class LoadingPanel(QtWidgets.QWidget):
         create the buttons and add it to the LoadingPanel Widget.
         """
         pass
+
+    def get_maya_path(self, user_config_root, user_config_tree, user_config_path):
+        versions=['2025', '2024']
+        path_found = None
+        for each_version in versions:
+            default_path=r'C:\Program Files\Autodesk\Maya{}\bin\maya.exe'.format(each_version)
+            if os.path.exists(default_path):
+                path_found = True
+                maya_app = default_path
+                maya_version = each_version
+                break
+        if not path_found:
+            get_maya_path = QtWidgets.QFileDialog()
+            get_maya_path.setFileMode(QtWidgets.QFileDialog.ExistingFiles)
+            if get_maya_path.exec_():
+                maya_path = get_maya_path.selectedFiles()[0]
+                if '.lnk' in maya_path:
+                    shell = Dispatch("WScript.Shell")
+                    maya_app = shell.CreateShortcut(maya_path).TargetPath
+                else:
+                    maya_app = maya_path
+                    maya_version = re.search(r"Maya(\d{4})", maya_app).group(1)
+
+        config_maya_path = user_config_root.find('./software/maya/path')
+        config_maya_version = user_config_root.find('./software/maya/version')
+        config_maya_path.text = maya_app
+        config_maya_version.text = maya_version
+        user_config_tree.write(user_config_path, encoding="utf-8", xml_declaration=True)
+        return maya_app
+
+    def get_houdini_path(self, user_config_root, user_config_tree, user_config_path):
+        houdini_paths = []
+        base_path = r"C:\Program Files\Side Effects Software"
+        search_pattern = os.path.join(base_path, "Houdini *", "bin", "houdini.exe")
+        for houdini_path in glob.glob(search_pattern):
+            houdini_paths.append(houdini_path)
+        if houdini_paths and len(houdini_paths)==1:
+            houdini_app = houdini_paths[0]
+            houdini_version = re.search(r"Houdini (\d+\.\d+\.\d+)", houdini_app).group(1)
+        else:
+            get_houdin_path = QtWidgets.QFileDialog()
+            get_houdin_path.setFileMode(QtWidgets.QFileDialog.ExistingFiles)
+            if get_houdin_path.exec_():
+                houdini_path = get_houdin_path.selectedFiles()[0]
+                if '.lnk' in houdini_path:
+                    shell = Dispatch("WScript.Shell")
+                    houdini_app = shell.CreateShortcut(houdini_path).TargetPath
+                else:
+                    houdini_app = houdini_path
+                    houdini_version = re.match(r"Houdini (\d+\.\d+\.\d+)", houdini_path)
+
+        config_houdini_path = user_config_root.find('./software/houdini/path')
+        config_houdini_version = user_config_root.find('./software/houdini/version')
+        config_houdini_path.text = houdini_app
+        config_houdini_version.text = houdini_version
+        user_config_tree.write(user_config_path, encoding="utf-8", xml_declaration=True)
+        return houdini_app

@@ -47,5 +47,5 @@ class AssetManagerInterface(qfluentwidgets.SingleDirectionScrollArea):
         self.vBoxLayout.setContentsMargins(0, 0, 15, 0)
 
         self.setStyleSheet("QScrollArea {border: none; background:transparent}")
-        self.view.setStyleSheet('QWidget {background:transparent}')
+        #self.view.setStyleSheet('QWidget {background:transparent}')
 

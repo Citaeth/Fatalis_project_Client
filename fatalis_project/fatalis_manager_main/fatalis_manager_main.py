@@ -26,7 +26,7 @@ class FatalisManagerMain(qfluentwidgets.FluentWindow):
         self.asset_data_base = self.read_data_base()
 
         self.add_navigations_interface()
-        self.resize(1750, 850)
+        self.resize(1500, 850)
 
 
     def add_navigations_interface(self):
@@ -58,7 +58,7 @@ class FatalisManagerMain(qfluentwidgets.FluentWindow):
         If not, it should open a dialog window to ask the user its name before opening the whole Manager.
         :return:
         """
-        user_config = utils.get_user_config_file()
+        user_config = utils.get_user_config_file()[0]
         if not user_config.find("./user/name").text:
             dialog  = utils.AddUserName()
             if dialog.exec():

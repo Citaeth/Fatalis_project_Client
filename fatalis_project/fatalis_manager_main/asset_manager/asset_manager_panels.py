@@ -3,12 +3,13 @@ import qfluentwidgets
 import subprocess
 
 from fatalis_project.ui_utils import ui_panels, utils, publisher_main
+from fatalis_project.ui_utils.http_request import read_data_base, change_asset_status
 
 
 class AssetTreePanel(ui_panels.TreePanel):
     def fill_tree(self):
         item_assets = QtWidgets.QTreeWidgetItem([self.tr('Assets - ')])
-        user_config = utils.get_user_config_file()
+        user_config = utils.get_user_config_file()[0]
         asset_list = user_config.find('./assets/name').text.split(", ")
         for each_asset in asset_list:
             item_assets.addChild(QtWidgets.QTreeWidgetItem([self.tr(each_asset)]))
@@ -45,7 +46,8 @@ class AssetMainTablePanel(ui_panels.MainTablePanel):
         'user_id': 4,
         'created_at': 5,
         'description': 6,
-        'id':7
+        'id':7,
+        'status':8
     }
 
     def update_table_with_asset_database(self, database_assets_infos):
@@ -65,6 +67,14 @@ class AssetMainTablePanel(ui_panels.MainTablePanel):
                 self.tableView.setItem(row, column_number, item)
             row = row + 1
 
+    def refresh_table(self):
+        assets_database_infos = read_data_base.get_assets_from_database()
+        self.update_table_with_asset_database(assets_database_infos)
+
+    def change_status(self, asset_id, status):
+        print('change asset {} status into {}'.format(asset_id, status))
+        change_asset_status.change_asset_status(asset_id, status)
+        self.refresh_table()
 
 class AssetInfoPanel(ui_panels.InfoPanel):
     """
@@ -80,11 +90,11 @@ class AssetLoadingPanel(ui_panels.LoadingPanel):
         self.download_button = qfluentwidgets.PushButton('Dowmload File / Folder')
         self.vBoxLayout.addWidget(self.download_button)
 
-        load_in_maya_button = qfluentwidgets.PushButton('Load Asset in Maya')
+        load_in_maya_button = qfluentwidgets.PushButton('Open Maya')
         load_in_maya_button.clicked.connect(self.load_asset_in_maya)
         self.vBoxLayout.addWidget(load_in_maya_button)
 
-        load_in_houdini_button = qfluentwidgets.PushButton('Load Asset in Houdini')
+        load_in_houdini_button = qfluentwidgets.PushButton('Open Houdini')
         load_in_houdini_button.clicked.connect(self.load_asset_in_houdini)
         self.vBoxLayout.addWidget(load_in_houdini_button)
 
@@ -97,9 +107,10 @@ class AssetLoadingPanel(ui_panels.LoadingPanel):
         pass
 
     def load_asset_in_maya(self):
-        user_config = utils.get_user_config_file()
-        maya_path = user_config.find('./software/maya/path').text
-
+        user_config_root, user_config_tree, user_config_path = utils.get_user_config_file()
+        maya_path = user_config_root.find('./software/maya/path').text
+        if not maya_path:
+            maya_path = self.get_maya_path(user_config_root, user_config_tree, user_config_path)
         try:
             subprocess.Popen([maya_path])
         except FileNotFoundError:
@@ -109,9 +120,10 @@ class AssetLoadingPanel(ui_panels.LoadingPanel):
 
 
     def load_asset_in_houdini(self):
-        user_config = utils.get_user_config_file()
-        houdini_path = user_config.find('./software/houdini/path').text
-
+        user_config_root, user_config_tree, user_config_path = utils.get_user_config_file()
+        houdini_path = user_config_root.find('./software/houdini/path').text
+        if not houdini_path:
+            houdini_path = self.get_houdini_path(user_config_root, user_config_tree, user_config_path)
         try:
             subprocess.Popen([houdini_path])
         except FileNotFoundError:

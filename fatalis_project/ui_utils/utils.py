@@ -20,7 +20,7 @@ def get_user_config_file():
 
     tree = ET.parse(config_path)
     root = tree.getroot()
-    return root
+    return root, tree, config_path
 
 def get_user_config_file_path():
     if getattr(sys, 'frozen', False):
@@ -57,19 +57,18 @@ class AddUserName(QtWidgets.QDialog):
 
         self.label = QtWidgets.QLabel("Enter your name :", self)
         self.input_name = QtWidgets.QLineEdit(self)
-        self.bouton = QtWidgets.QDialogButtonBox(
+        self.button = QtWidgets.QDialogButtonBox(
             QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel, self
         )
 
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.label)
         layout.addWidget(self.input_name)
-        layout.addWidget(self.bouton)
+        layout.addWidget(self.button)
         self.setLayout(layout)
 
-        # Connexions
-        self.bouton.accepted.connect(self.accept)
-        self.bouton.rejected.connect(self.reject)
+        self.button.accepted.connect(self.accept)
+        self.button.rejected.connect(self.reject)
 
     def add_name_to_user_config(self):
         """
@@ -79,7 +78,7 @@ class AddUserName(QtWidgets.QDialog):
         user_name_normalize = (self.input_name.text()).replace(" ", "")
         config_path = get_user_config_file_path()
         tree = ET.parse(config_path)
-        root = get_user_config_file()
+        root = tree.getroot()
         name_element = root.find("./user/name")
         if name_element.text is None:
             name_element.text = user_name_normalize

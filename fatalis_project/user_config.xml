@@ -4,17 +4,18 @@
         <name></name>
     </user>
     <assets>
-        <name>Fatalis, Anna, Blissbill, Forest, Castle, FX_Breath, FX_Ground, FX_Embers, Sky_Matte</name>
+        <name>Fatalis, Anna, Blissbill, Forest, Castle, FX_Breath, FX_Ground, FX_Embers, Sky_Matte, Test</name>
         <task>Concept, Modeling, Texturing, Lookdev, Rigging, Layout, Animation, FX, CFX, Lighting, Matte, Compositing, Editing</task>
+        <status>WIP, Awaiting Feedback, Approved, Ignore</status>
     </assets>
     <software>
         <maya>
-            <path>C:\Program Files\Autodesk\Maya2025\bin\maya.exe</path>
-            <version>2025</version>
+            <path/>
+            <version/>
         </maya>
         <houdini>
-            <path>C:\Program Files\Side Effects Software\Houdini 20.0.547\bin\houdini.exe</path>
-            <version>20.0.547</version>
+            <path/>
+            <version />
         </houdini>
     </software>
 </config>

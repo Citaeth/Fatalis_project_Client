@@ -35,7 +35,7 @@ class PublisherApplication(QtWidgets.QWidget):
     """
     PublisherApplication build the layout/widgets contained in the PublisherInterface.
     """
-    CONFIG = utils.get_user_config_file()
+    CONFIG = utils.get_user_config_file()[0]
     def __init__(self, parent=None):
         super(PublisherApplication, self).__init__(parent)
         self.asset_manager_layout = QtWidgets.QVBoxLayout(self)
@@ -48,6 +48,7 @@ class PublisherApplication(QtWidgets.QWidget):
 
         asset_name_list = self.CONFIG.find('./assets/name').text.split(", ")
         asset_task_list = self.CONFIG.find('./assets/task').text.split(", ")
+        status_list = self.CONFIG.find('./assets/status').text.split(", ")
         name_task_widget = QtWidgets.QWidget()
         name_task_layout = QtWidgets.QHBoxLayout()
         name_task_widget.setLayout(name_task_layout)

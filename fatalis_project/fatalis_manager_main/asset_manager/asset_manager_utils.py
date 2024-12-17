@@ -20,7 +20,7 @@ def create_tab(database_assets_infos):
     info_widget = panels.AssetInfoPanel()
     right_tab_layout.addWidget(info_widget)
     load_buttons_widget = panels.AssetLoadingPanel()
-    load_buttons_widget.download_button.clicked.connect(lambda:download_files(main_table_widget, database_assets_infos))
+    load_buttons_widget.download_button.clicked.connect(lambda:download_files(main_table_widget))
     right_tab_layout.addWidget(load_buttons_widget)
     right_tab_layout.setStretch(0, 1)
 
@@ -64,7 +64,7 @@ def create_tab(database_assets_infos):
 def fill_info_selected_in_table(table_widget, info_widget):
     selected_items = table_widget.tableView.selectedItems()
     if selected_items:
-        selected_row = selected_items[0].row()  # Obtenir l'index de la ligne sélectionnée
+        selected_row = selected_items[0].row()
         row_data = [table_widget.tableView.item(selected_row, col).text() for col in range(table_widget.tableView.columnCount())]
         infos = textwrap.dedent(f"""\
         {row_data[0]};
@@ -89,7 +89,7 @@ def apply_filters_on_main_table(asset_filter, task_filter, main_table_widget):
         iterator += 1
 
     for index in range(task_filter.listWidget.count()):
-        item = task_filter.listWidget.item(index)  # Récupérer l'élément
+        item = task_filter.listWidget.item(index)
         if item.checkState() == QtCore.Qt.CheckState.Checked:
             checked_tasks.append(item.text())
 
