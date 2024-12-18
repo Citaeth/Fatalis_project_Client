@@ -1,13 +1,12 @@
 import os
 from pathlib import Path
-from PySide6 import QtWidgets, QtGui, QtCore
+import qfluentwidgets
 import xml.etree.ElementTree as ET
 import fatalis_project
 from fatalis_project.ui_utils.http_request.add_user import add_user_to_database
 import zipfile
 import tempfile
 
-import qfluentwidgets
 
 
 def get_user_config_file():
