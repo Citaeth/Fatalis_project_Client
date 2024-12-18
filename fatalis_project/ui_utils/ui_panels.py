@@ -56,7 +56,6 @@ class TaskFilterPanel(QtWidgets.QWidget):
             item.setCheckState(QtCore.Qt.Unchecked)
             self.listWidget.addItem(item)
 
-        self.setStyleSheet("Demo{background: rgb(249, 249, 249)} ")
         self.hBoxLayout.setContentsMargins(0, 0, 0, 0)
         self.hBoxLayout.addWidget(self.listWidget)
 
@@ -89,7 +88,6 @@ class FilterBarPanel(QtWidgets.QWidget):
     """
     def __init__(self):
         super().__init__()
-        self.setStyleSheet("Demo {background: rgb(32, 32, 32)}")
 
         self.hBoxLayout = QtWidgets.QHBoxLayout(self)
         self.lineEdit = qfluentwidgets.SearchLineEdit(self)
@@ -140,7 +138,6 @@ class MainTablePanel(QtWidgets.QWidget):
         self.tableView.setBorderVisible(True)
 
         self.define_table_content()
-        self.setStyleSheet("Demo{background: rgb(255, 255, 255)} ")
         self.hBoxLayout.addWidget(self.tableView)
 
         self.tableView.setContextMenuPolicy(QtCore.Qt.ContextMenuPolicy.CustomContextMenu)

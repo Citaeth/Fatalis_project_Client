@@ -14,8 +14,6 @@ class PublishWindow(qfluentwidgets.FluentWindow):
         super(PublishWindow, self).__init__()
         self.setWindowTitle('Publisher')
         self.setWindowIcon(QtGui.QIcon(':/qfluentwidgets/images/icons/Share_white.svg'))
-        qfluentwidgets.setTheme(qfluentwidgets.Theme.DARK)
-        qfluentwidgets.setThemeColor("#8e3838", save=False)
         self.resize(650, 350)
 
         self.add_navigations_interface()
@@ -52,13 +50,14 @@ class PublisherApplication(QtWidgets.QWidget):
         name_task_widget = QtWidgets.QWidget()
         name_task_layout = QtWidgets.QHBoxLayout()
         name_task_widget.setLayout(name_task_layout)
-        self.name_version_widget = QtWidgets.QLineEdit('Enter Version Name')
+        self.name_version_widget = qfluentwidgets.LineEdit()
+        self.name_version_widget.setPlaceholderText('Enter Version Name')
         name_version_layout = QtWidgets.QHBoxLayout(self.name_version_widget)
 
-        self.asset_name_widget = QtWidgets.QComboBox()
+        self.asset_name_widget = qfluentwidgets.ComboBox()
         self.asset_name_widget.addItems(asset_name_list)
         name_version_layout = QtWidgets.QVBoxLayout(self.asset_name_widget)
-        self.asset_task_widget = QtWidgets.QComboBox()
+        self.asset_task_widget = qfluentwidgets.ComboBox()
         self.asset_task_widget.addItems(asset_task_list)
         asset_task_layout = QtWidgets.QHBoxLayout(self.asset_task_widget)
 
@@ -71,9 +70,9 @@ class PublisherApplication(QtWidgets.QWidget):
 
         path_widget = QtWidgets.QWidget()
         path_layout = QtWidgets.QHBoxLayout(path_widget)
-        path_button = QtWidgets.QPushButton('Give a Path:')
+        path_button = qfluentwidgets.PushButton('Give a Path:')
         path_button.clicked.connect(self.get_path)
-        self.path_search = QtWidgets.QLineEdit()
+        self.path_search = qfluentwidgets.LineEdit()
         self.path_search.setReadOnly(True)
 
         path_layout.addWidget(path_button)
@@ -166,5 +165,6 @@ def open_publisher():
     if PublishWindow.INTERFACE_INSTANCE:
         PublishWindow.INTERFACE_INSTANCE.close()
         PublishWindow.INTERFACE_INSTANCE = None
+    qfluentwidgets.setTheme(qfluentwidgets.Theme.DARK)
     PublishWindow.INTERFACE_INSTANCE = PublishWindow()
     PublishWindow.INTERFACE_INSTANCE.show()

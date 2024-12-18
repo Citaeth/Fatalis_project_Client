@@ -1,11 +1,13 @@
 import os
-import sys
-from PySide6 import QtWidgets
+from pathlib import Path
+from PySide6 import QtWidgets, QtGui, QtCore
 import xml.etree.ElementTree as ET
 import fatalis_project
 from fatalis_project.ui_utils.http_request.add_user import add_user_to_database
 import zipfile
 import tempfile
+
+import qfluentwidgets
 
 
 def get_user_config_file():
@@ -23,21 +25,13 @@ def get_user_config_file():
     return root, tree, config_path
 
 def get_user_config_file_path():
-    if getattr(sys, 'frozen', False):
-        base_path = sys._MEIPASS
-    else:
-        base_path = os.path.abspath(fatalis_project.__file__).replace("__init__.py", "")
-
-    config_path = os.path.join(base_path, "user_config.xml")
+    base_path = Path(fatalis_project.__file__).parent
+    config_path = base_path / "user_config.xml"
     return config_path
 
 def get_project_users_config_file():
-    if getattr(sys, 'frozen', False):
-        base_path = sys._MEIPASS
-    else:
-        base_path = os.path.abspath(fatalis_project.__file__).replace("__init__.py", "")
-
-    config_path = os.path.join(base_path, "users.xml")
+    base_path = Path(fatalis_project.__file__).parent
+    config_path = base_path / "users.xml"
 
     if not os.path.exists(config_path):
         raise FileNotFoundError(f"{config_path} not found")
@@ -46,29 +40,20 @@ def get_project_users_config_file():
     root = tree.getroot()
     return config_path, root
 
-class AddUserName(QtWidgets.QDialog):
+class AddUserName(qfluentwidgets.Dialog):
     """
     QDialog to ask the user its name, if it's not already fill in the user_config.xml.
     """
     def __init__(self):
-        super().__init__()
-        self.setWindowTitle("What's your name, Darling?")
-        self.setGeometry(100, 100, 300, 150)
+        super().__init__("What's your name, Darling?", 'Enter your name :')
+        self.setTitleBarVisible(False)
+        layout = self.layout()
+        self.input_name = qfluentwidgets.LineEdit(self)
+        layout.addChildWidget(self.input_name)
+        self.input_name.move(150, 60)
 
-        self.label = QtWidgets.QLabel("Enter your name :", self)
-        self.input_name = QtWidgets.QLineEdit(self)
-        self.button = QtWidgets.QDialogButtonBox(
-            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel, self
-        )
-
-        layout = QtWidgets.QVBoxLayout()
-        layout.addWidget(self.label)
-        layout.addWidget(self.input_name)
-        layout.addWidget(self.button)
         self.setLayout(layout)
 
-        self.button.accepted.connect(self.accept)
-        self.button.rejected.connect(self.reject)
 
     def add_name_to_user_config(self):
         """

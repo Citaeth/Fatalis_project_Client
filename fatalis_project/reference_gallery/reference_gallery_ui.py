@@ -1,5 +1,5 @@
 import os
-import sys
+from pathlib import Path
 from PySide6 import QtWidgets, QtGui
 import qfluentwidgets
 
@@ -44,11 +44,8 @@ class ReferenceGalleryApplication(qfluentwidgets.HeaderCardWidget):
 
     @staticmethod
     def get_resources_images():
-        if getattr(sys, 'frozen', False):
-            script_dir = sys._MEIPASS
-        else:
-            script_dir = os.path.dirname(os.path.abspath(__file__))
-        resources_dir = os.path.join(script_dir, 'resources')
+        script_dir = Path(__file__).parent
+        resources_dir = script_dir / 'resources'
         if not os.path.isdir(resources_dir):
             raise FileNotFoundError(f"Le dossier {resources_dir} est introuvable.")
 

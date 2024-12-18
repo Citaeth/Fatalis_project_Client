@@ -10,11 +10,11 @@
     </assets>
     <software>
         <maya>
-            <path/>
-            <version/>
+            <path />
+            <version />
         </maya>
         <houdini>
-            <path/>
+            <path />
             <version />
         </houdini>
     </software>
