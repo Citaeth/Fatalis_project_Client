@@ -1,6 +1,6 @@
 import requests
 
-def upload_to_server(file_path, asset_version_name, asset_name, asset_task, user_name, infos):
+def upload_to_server(file_path, asset_version_name, asset_name, asset_task, asset_status, user_name, infos):
     server_url = "https://fatalisproject.duckdns.org/upload_file/upload"
     try:
         with open(file_path, 'rb') as file:
@@ -9,6 +9,7 @@ def upload_to_server(file_path, asset_version_name, asset_name, asset_task, user
                 'asset_version_name': asset_version_name,
                 'asset_name': asset_name,
                 'task': asset_task,
+                'status':asset_status,
                 'user_name': user_name,
                 'infos': infos
             }

@@ -99,7 +99,7 @@ def apply_filters_on_main_table(asset_filter, task_filter, main_table_widget):
         if not assets_selected:
             main_table_widget.tableView.setRowHidden(row, False)
         for asset_filter in assets_selected:
-            if asset_filter in asset_name or 'Assets - ' in assets_selected:
+            if asset_filter.lower() in asset_name.lower() or 'Assets - ' in assets_selected:
                 main_table_widget.tableView.setRowHidden(row, False)
                 break
             else:

@@ -87,7 +87,7 @@ class AssetLoadingPanel(ui_panels.LoadingPanel):
 
     """
     def create_buttons(self):
-        self.download_button = qfluentwidgets.PushButton('Dowmload File / Folder')
+        self.download_button = qfluentwidgets.PushButton('Download File / Folder')
         self.vBoxLayout.addWidget(self.download_button)
 
         load_in_maya_button = qfluentwidgets.PushButton('Open Maya')

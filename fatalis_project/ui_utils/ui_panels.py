@@ -1,7 +1,7 @@
 import os
 import glob
 import re
-from PySide6 import QtWidgets, QtCore
+from PySide6 import QtWidgets, QtCore, QtGui
 import qfluentwidgets
 from win32com.client import Dispatch
 from functools import partial
@@ -77,7 +77,6 @@ class TaskFilterPanel(QtWidgets.QWidget):
             "Matte",
             "Compositing",
             "Editing",
-            "Youping",
         ]
         return stands
 
@@ -105,7 +104,6 @@ class FilterBarPanel(QtWidgets.QWidget):
             "matte",
             "compositing",
             "editing",
-            "youping",
         ]
         self.completer = QtWidgets.QCompleter(stands, self.lineEdit)
         self.completer.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
@@ -144,10 +142,22 @@ class MainTablePanel(QtWidgets.QWidget):
         self.tableView.customContextMenuRequested.connect(self.open_context_menu)
 
     def define_table_content(self):
+        """
+        define the row/column information, as name and width in the table.
+        :return:
+        """
         self.tableView.setRowCount(60)
         self.tableView.setColumnCount(9)
         self.tableView.verticalHeader().hide()
-        self.tableView.setHorizontalHeaderLabels(['Asset Name', '.ext', 'Task', 'Version', 'Owner', 'Date', 'Infos', 'asset_id', 'status'])
+        self.tableView.setHorizontalHeaderLabels(['Asset Name',
+                                                  '.ext',
+                                                  'Task',
+                                                  'Version',
+                                                  'Owner',
+                                                  'Date',
+                                                  'Infos',
+                                                  'asset_id',
+                                                  'status'])
 
         self.tableView.setColumnWidth(0, 200)
         self.tableView.setColumnWidth(1, 65)
@@ -161,11 +171,20 @@ class MainTablePanel(QtWidgets.QWidget):
         self.tableView.setColumnHidden(7, True)
         self.tableView.setColumnWidth(8, 50)
 
-    def fill_asset_list(self):
+    def update_table_with_asset_database(self, database_assets_infos):
+        """
+        fill the table with the datas of the assets, from the database information. Should be override depending
+        on the context (asset or shot.)
+        :param database_assets_infos: dictionnary who contain the assets database information.
+        """
         pass
 
     def open_context_menu(self, position):
-
+        """
+        open a menu when right click in a row table.
+        Use to refresh the content of the table, or to change the status of the selected asset version.
+        :param position:
+        """
         index = self.tableView.indexAt(position)
         if not index.isValid():
             return
@@ -173,26 +192,36 @@ class MainTablePanel(QtWidgets.QWidget):
         row = index.row()
         row_data = [self.tableView.item(row, col).text() for col in range(self.tableView.columnCount())]
 
-        menu = QtWidgets.QMenu(self)
-
-        action_refresh = menu.addAction("Refresh Table")
-
-        status_submenu = menu.addMenu("Change Status")
+        menu = qfluentwidgets.RoundMenu(self)
+        action_refresh = QtGui.QAction(qfluentwidgets.FluentIcon.SYNC.icon(), "Refresh Table", self)
         action_refresh.triggered.connect(self.refresh_table)
-
+        menu.addAction(qfluentwidgets.Action(qfluentwidgets.FluentIcon.SYNC, "Refresh Table"))
+        menu.addSeparator()
         config = utils.get_user_config_file()[0]
         status_name_list = config.find('./assets/status').text.split(", ")
-
+        submenu = qfluentwidgets.RoundMenu("Change Status", self)
+        submenu.setIcon(qfluentwidgets.FluentIcon.CHEVRON_RIGHT)
         for each_status in status_name_list:
-            action = status_submenu.addAction(each_status)
+            action = QtGui.QAction(each_status, self)
             action.triggered.connect(partial(self.change_status, row_data[7], each_status))
-
-        menu.exec(self.tableView.mapToGlobal(position))
+            submenu.addAction(action)
+        menu.addMenu(submenu)
+        menu.exec(self.tableView.mapToGlobal(position), aniType=qfluentwidgets.MenuAnimationType.DROP_DOWN)
 
     def refresh_table(self):
+        """
+        function to refresh the table, should be overridden.
+        :return:
+        """
         pass
 
     def change_status(self, asset_id, status):
+        """
+        function to refresh the table, should be overridden.
+        :param int asset_id: ID of the asset that should change its status. Need to send the information to server.
+        :param str status: new status of the asset version.
+        :return:
+        """
         pass
 
 
@@ -241,6 +270,15 @@ class LoadingPanel(QtWidgets.QWidget):
         pass
 
     def get_maya_path(self, user_config_root, user_config_tree, user_config_path):
+        """
+        Try to get automatically the maya.exe path, using the most common usage. If it's not found, open a dialog window
+        to let the user point on the .exe, or a Link app, to get the .exe path.
+        It will be added to the user_config, and used to open maya.
+        :param user_config_root: the config root instance, used to read the data from the config.
+        :param user_config_tree: the config tree instance, used to write the changes.
+        :param user_config_path: the file config hard path, used to save it after writing using config_tree.
+        :return:
+        """
         versions=['2025', '2024']
         path_found = None
         for each_version in versions:
@@ -270,6 +308,16 @@ class LoadingPanel(QtWidgets.QWidget):
         return maya_app
 
     def get_houdini_path(self, user_config_root, user_config_tree, user_config_path):
+        """
+        Try to get automatically the houdini.exe path, using the most common usage. If it's not found, or if more than
+        one version of houdini are found, open a dialog window to let the user point on the .exe, or a Link app,
+        to get the .exe path.
+        It will be added to the user_config, and used to open houdini.
+        :param user_config_root: the config path root instance, used to read the data from the config.
+        :param user_config_tree: the config tree instance, used to write the changes.
+        :param user_config_path: the file config hard path, used to save it after writing using config_tree.
+        :return:
+        """
         houdini_paths = []
         base_path = r"C:\Program Files\Side Effects Software"
         search_pattern = os.path.join(base_path, "Houdini *", "bin", "houdini.exe")

@@ -52,11 +52,13 @@ def get_files_from_database():
 
 
 def fetch_users_from_db():
-    """Connect to the remote PostgreSQL database and fetch all users."""
+    """
+    Connect to the remote PostgreSQL database and fetch all users.
+    """
     url = 'https://fatalisproject.duckdns.org/db_get_users/get_users'
 
     try:
-        response = requests.get(url)
+        response = requests.get(url, timeout=10)
 
         if response.status_code == 200:
             data = response.json()
@@ -74,7 +76,11 @@ def fetch_users_from_db():
 
 
 def save_to_xml(users, xml_file):
-    """Save users data to an XML file."""
+    """
+    Save users data to an XML file.
+    :param users: users information from database to write in the xml file.
+    :param xml_file: xml file to write the users' information.
+    """
     root = ET.Element("Users")
 
     for user in users:
@@ -88,7 +94,10 @@ def save_to_xml(users, xml_file):
 
 
 def load_from_xml(xml_file):
-    """Load users data from an XML file."""
+    """
+    Load users data from an XML file.
+    :param xml_file: xml file to load the users' information.
+    """
     try:
         users = []
         for user_element in xml_file.findall("User"):
@@ -105,7 +114,9 @@ def load_from_xml(xml_file):
 
 
 def compare_and_update_db():
-    """Compare DB and XML, and update XML if necessary."""
+    """
+    Compare DB and XML, and update XML if necessary.
+    """
     user_xml_path, users_xml_root = utils.get_project_users_config_file()
     users_from_db = fetch_users_from_db()
     users_from_xml = load_from_xml(users_xml_root)

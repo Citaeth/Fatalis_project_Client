@@ -27,7 +27,7 @@ class FatalisManagerMain(qfluentwidgets.FluentWindow):
 
         self.add_navigations_interface()
         self.resize(1500, 850)
-
+        self.center_ui()
 
     def add_navigations_interface(self):
         """
@@ -78,6 +78,12 @@ class FatalisManagerMain(qfluentwidgets.FluentWindow):
         """
         pass
 
+    def center_ui(self):
+        screen = QtGui.QGuiApplication.primaryScreen().geometry()
+        window_geometry = self.frameGeometry()
+        center_point = screen.center()
+        window_geometry.moveCenter(center_point)
+        self.move(window_geometry.topLeft())
 
 if __name__ == '__main__':
     """

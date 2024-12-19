@@ -11,9 +11,12 @@ import tempfile
 
 def get_user_config_file():
     """
-    Get the user config file, located in the fatalis_project.
+    Get the user_config file, located in the fatalis_project.
+    Should return the hard path, the root and tree instance to manipulate the whole config.
     Handles both regular execution and PyInstaller execution.
-    :return root:
+    :return root: config root instance, used to read the data from the config.
+    :return tree: config tree instance, used to write the changes.
+    :return config_path: file config hard path, used to save it after writing using config_tree.
     """
     config_path = get_user_config_file_path()
     if not os.path.exists(config_path):
@@ -24,11 +27,23 @@ def get_user_config_file():
     return root, tree, config_path
 
 def get_user_config_file_path():
+    """
+    Get the user_config file path, located in the fatalis_project.
+    Should only return the hard path.
+    :return config_path: file config hard path, used to save it after writing using config_tree.
+    """
     base_path = Path(fatalis_project.__file__).parent
     config_path = base_path / "user_config.xml"
     return config_path
 
 def get_project_users_config_file():
+    """
+    Get the user_config file, located in the fatalis_project.
+    Should return the hard path, the root and tree instance to manipulate the whole config.
+    Handles both regular execution and PyInstaller execution.
+    :return root: config root instance, used to read the data from the config.
+    :return config_path: file config hard path, used to save it after writing using config_tree.
+    """
     base_path = Path(fatalis_project.__file__).parent
     config_path = base_path / "users.xml"
 
@@ -46,6 +61,7 @@ class AddUserName(qfluentwidgets.Dialog):
     def __init__(self):
         super().__init__("What's your name, Darling?", 'Enter your name :')
         self.setTitleBarVisible(False)
+        self.yesButton.setDefault(True)
         layout = self.layout()
         self.input_name = qfluentwidgets.LineEdit(self)
         layout.addChildWidget(self.input_name)

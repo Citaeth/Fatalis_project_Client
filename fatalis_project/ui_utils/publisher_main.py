@@ -1,5 +1,5 @@
 import os
-from PySide6 import QtWidgets, QtGui
+from PySide6 import QtWidgets, QtGui, QtCore
 import qfluentwidgets
 from fatalis_project.ui_utils import utils
 from fatalis_project.ui_utils.http_request.exporter_main import upload_to_server
@@ -33,9 +33,10 @@ class PublisherApplication(QtWidgets.QWidget):
     """
     PublisherApplication build the layout/widgets contained in the PublisherInterface.
     """
-    CONFIG = utils.get_user_config_file()[0]
+    CONFIG = None
     def __init__(self, parent=None):
         super(PublisherApplication, self).__init__(parent)
+        self.CONFIG = utils.get_user_config_file()[0]
         self.asset_manager_layout = QtWidgets.QVBoxLayout(self)
 
         self.build_name_task_tab()
@@ -43,10 +44,12 @@ class PublisherApplication(QtWidgets.QWidget):
         self.build_info_publish_tab()
 
     def build_name_task_tab(self):
-
+        """
+        build the tab to get details about the publish, like the name of the version, the Asset and the task.
+        """
         asset_name_list = self.CONFIG.find('./assets/name').text.split(", ")
         asset_task_list = self.CONFIG.find('./assets/task').text.split(", ")
-        status_list = self.CONFIG.find('./assets/status').text.split(", ")
+        asset_status_list = self.CONFIG.find('./assets/status').text.split(", ")
         name_task_widget = QtWidgets.QWidget()
         name_task_layout = QtWidgets.QHBoxLayout()
         name_task_widget.setLayout(name_task_layout)
@@ -60,14 +63,20 @@ class PublisherApplication(QtWidgets.QWidget):
         self.asset_task_widget = qfluentwidgets.ComboBox()
         self.asset_task_widget.addItems(asset_task_list)
         asset_task_layout = QtWidgets.QHBoxLayout(self.asset_task_widget)
+        self.asset_status_widget = qfluentwidgets.ComboBox()
+        self.asset_status_widget.addItems(asset_status_list)
+        asset_status_layout = QtWidgets.QHBoxLayout(self.asset_status_widget)
 
         name_task_layout.addWidget(self.name_version_widget)
         name_task_layout.addWidget(self.asset_name_widget)
         name_task_layout.addWidget(self.asset_task_widget)
+        name_task_layout.addWidget(self.asset_status_widget)
         self.asset_manager_layout.addWidget(name_task_widget)
 
     def build_path_tab(self):
-
+        """
+        build the tab that contain the button and the LineEdit to choose the file/group of file that we want to publish
+        """
         path_widget = QtWidgets.QWidget()
         path_layout = QtWidgets.QHBoxLayout(path_widget)
         path_button = qfluentwidgets.PushButton('Give a Path:')
@@ -80,7 +89,10 @@ class PublisherApplication(QtWidgets.QWidget):
         self.asset_manager_layout.addWidget(path_widget)
 
     def build_info_publish_tab(self):
-
+        """
+        build the tabs with the information panel to let user comment some infos about its version.
+        Contain also the "Publish" button.
+        """
         info_publish_widget = QtWidgets.QWidget()
         info_publish_layout = QtWidgets.QHBoxLayout(info_publish_widget)
 
@@ -96,6 +108,9 @@ class PublisherApplication(QtWidgets.QWidget):
         self.asset_manager_layout.addWidget(info_publish_widget)
 
     def get_path(self):
+        """
+        Get the path of the asset that we want to publish.
+        """
         path = QtWidgets.QFileDialog()
         path.setFileMode(QtWidgets.QFileDialog.ExistingFiles)
         if path.exec_():
@@ -105,7 +120,10 @@ class PublisherApplication(QtWidgets.QWidget):
             self.path_search.setText(fileNames_text)
 
     def publish_assets(self):
-
+        """
+        get all information that we need from the user dialog and config file, to publish the asset on the server.
+        :return:
+        """
         asset_version_name = self.name_version_widget.text()
         if asset_version_name == '' or asset_version_name == 'Enter Version Name':
             self.publish_missing_infos_dialog('it missing the version name information to do the Publish!')
@@ -115,26 +133,29 @@ class PublisherApplication(QtWidgets.QWidget):
             self.publish_missing_infos_dialog('the version name should contain the asset name please!')
             return
         asset_task = self.asset_task_widget.currentText()
+        asset_status = self.asset_status_widget.currentText()
         user_name = self.CONFIG.find('./user/name').text
         infos = self.info_widget.toPlainText()
         infos = '' if infos == 'Gives some infos if necessary' else infos
         path = self.fileNames
         if isinstance(path, list):
             zip_file = utils.convert_files_group_to_zip(path)
-            upload_to_server(zip_file, asset_version_name, asset_name, asset_task, user_name, infos)
+            upload_to_server(zip_file, asset_version_name, asset_name, asset_task, asset_status, user_name, infos)
             os.remove(zip_file)
         else:
-            upload_to_server(path, asset_version_name, asset_name, asset_task, user_name, infos)
+            upload_to_server(path, asset_version_name, asset_name, asset_task, asset_status, user_name, infos)
 
     def publish_missing_infos_dialog(self, message):
-        dlg = QtWidgets.QMessageBox(self)
-        dlg.setWindowTitle('Publish issue, missing information')
-        dlg.setText(message)
-        button = dlg.exec()
-
-        if button == QtWidgets.QMessageBox.Ok:
-            print('OK!')
-
+        """
+        quick messagebox UI to let the user know that someting is missing in the publish information.
+        :param str message: message to return to the user in the UI
+        """
+        qfluentwidgets.InfoBar.warning('Publish issue, missing information',
+                                       message,
+                                       orient=QtCore.Qt.Vertical,
+                                       isClosable=True,
+                                       duration=2000,
+                                       parent=self)
 
 class PublisherInterface(qfluentwidgets.SingleDirectionScrollArea):
     """
@@ -162,6 +183,9 @@ class PublisherInterface(qfluentwidgets.SingleDirectionScrollArea):
 
 
 def open_publisher():
+    """
+    open publisher UI
+    """
     if PublishWindow.INTERFACE_INSTANCE:
         PublishWindow.INTERFACE_INSTANCE.close()
         PublishWindow.INTERFACE_INSTANCE = None
