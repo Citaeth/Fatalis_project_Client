@@ -10,8 +10,7 @@ from fatalis_project.ui_utils import utils
 
 class TreePanel(QtWidgets.QFrame):
     """
-    Base instance of the ThreePanel Widget, used to show the hierarchy of the project to filter the asset/shots
-    in the main tab UI.
+    Base instance of the ThreePanel Widget, used to show the assets or shots list, to filter the main table content.
     This class should be overridden by subclasses depending on the software or if we are in asset or shot context.
     """
     def __init__(self, enable_check=False):
@@ -41,7 +40,7 @@ class TreePanel(QtWidgets.QFrame):
 class TaskFilterPanel(QtWidgets.QWidget):
     """
     Base instance of the TaskFilterPanel Widget, used to show a list of the task of the project to filter elements
-    in the main tab UI.
+    in the main table.
     This class should be overridden by subclasses depending on the software or if we are in asset or shot context.
     """
     def __init__(self):
@@ -90,7 +89,7 @@ class FilterBarPanel(QtWidgets.QWidget):
 
         self.hBoxLayout = QtWidgets.QHBoxLayout(self)
         self.lineEdit = qfluentwidgets.SearchLineEdit(self)
-        self.button = qfluentwidgets.PushButton('Search', self)
+        self.search_button = qfluentwidgets.PushButton('Search', self)
 
         stands = [
             "concept",
@@ -112,7 +111,7 @@ class FilterBarPanel(QtWidgets.QWidget):
 
         self.hBoxLayout.setAlignment(QtCore.Qt.AlignCenter)
         self.hBoxLayout.addWidget(self.lineEdit, 1)
-        self.hBoxLayout.addWidget(self.button, 0, QtCore.Qt.AlignCenter)
+        self.hBoxLayout.addWidget(self.search_button, 0, QtCore.Qt.AlignCenter)
 
         self.lineEdit.setClearButtonEnabled(True)
         self.lineEdit.setPlaceholderText('Search stand')
@@ -210,24 +209,23 @@ class MainTablePanel(QtWidgets.QWidget):
 
     def refresh_table(self):
         """
-        function to refresh the table, should be overridden.
-        :return:
+        function to refresh the table, should be overridden to use the database needed, depending on assets or shot
+        context.
         """
         pass
 
     def change_status(self, asset_id, status):
         """
-        function to refresh the table, should be overridden.
+        function to change the status of selected version.
         :param int asset_id: ID of the asset that should change its status. Need to send the information to server.
         :param str status: new status of the asset version.
-        :return:
         """
         pass
 
 
 class InfoPanel(QtWidgets.QWidget):
     """
-    Base instance of the InfoPanel Widget, used to show details of the asset selected by the user in the MainTablePanel.
+    Base instance of the InfoPanel Widget, used to show details of the version selected by the user in the MainTablePanel.
     This class could be overridden by subclasses depending on the software or if we are in asset or shot context if
     needed.
     """
@@ -258,8 +256,9 @@ class LoadingPanel(QtWidgets.QWidget):
     This class should be overridden by subclasses depending on the software or if we are in asset or shot context if
     needed.
     """
-    def __init__(self):
-        super().__init__()
+    def __init__(self, table_widget):
+        super().__init__(table_widget)
+        self.table_widget = table_widget
         self.vBoxLayout = QtWidgets.QVBoxLayout(self)
         self.create_buttons()
 

@@ -3,6 +3,13 @@ import zipfile
 import requests
 
 def download_from_server(asset_id, download_path):
+    """
+    request to download asset from server, giving its asset_id to find it in the server,
+    and the downloading path, where we want to download the asset in local.
+    :param str asset_id:
+    :param str download_path:
+    :return:
+    """
     file_path_url = "https://fatalisproject.duckdns.org/download_file/get_file?asset_id={}".format(asset_id)
     try:
         response = requests.get(file_path_url, stream=True)

@@ -1,6 +1,11 @@
 import requests
 
 def add_user_to_database(user_name):
+    """
+    request to add the username register in the UI by a new user, into the server database.
+    :param str user_name:
+    :return:
+    """
     url = 'https://fatalisproject.duckdns.org/db_add_user/add_user'
     data = {'username': user_name}
 

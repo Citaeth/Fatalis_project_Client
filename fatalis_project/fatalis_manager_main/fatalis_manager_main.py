@@ -37,6 +37,8 @@ class FatalisManagerMain(qfluentwidgets.FluentWindow):
         self.asset_manager_interface = AssetManagerInterface(self)
         self.addSubInterface(self.asset_manager_interface, text='Asset Manager', icon=qfluentwidgets.FluentIcon.FOLDER)
 
+        #TODO: Implement Shot Workflow before let the ShotManager Tab free.
+
         # self.shot_manager_interface = ShotManagerInterface(self)
         # self.addSubInterface(self.shot_manager_interface,
         #                      text='Shot Manager',
@@ -67,6 +69,12 @@ class FatalisManagerMain(qfluentwidgets.FluentWindow):
             self.USER=user_config.find("./user/name").text
 
     def read_data_base(self):
+        """
+        read the database for the users, compare it to the xml config in local, and update it if necessary.
+        read the asset database in server to fill asset_database dictionary, and use it for everything. maybe the dict
+        could be more global?
+        :return:
+        """
         read_data_base.compare_and_update_db()
         asset_database = read_data_base.get_assets_from_database()
 
@@ -79,6 +87,10 @@ class FatalisManagerMain(qfluentwidgets.FluentWindow):
         pass
 
     def center_ui(self):
+        """
+        center the UI in the screen.
+        :return:
+        """
         screen = QtGui.QGuiApplication.primaryScreen().geometry()
         window_geometry = self.frameGeometry()
         center_point = screen.center()

@@ -90,6 +90,11 @@ class AddUserName(qfluentwidgets.Dialog):
 
 
 def convert_files_group_to_zip(files):
+    """
+    convert the group of file to send to server into a single zip file.
+    :param list files: list of path of the files that we want to send.
+    :return:
+    """
     try:
         with tempfile.NamedTemporaryFile(delete=False, suffix=".zip") as temp_zip:
             zip_path = temp_zip.name

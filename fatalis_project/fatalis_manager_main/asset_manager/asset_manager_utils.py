@@ -1,8 +1,6 @@
 from PySide6 import QtWidgets, QtCore
 import textwrap
 from fatalis_project.fatalis_manager_main.asset_manager import asset_manager_panels as panels
-from fatalis_project.ui_utils.http_request import download_main
-
 
 def create_tab(database_assets_infos):
     """
@@ -13,29 +11,6 @@ def create_tab(database_assets_infos):
     """
     tabs = []
 
-    # Right tab Create before because InfoPanel should be updated when selecting an element in MainTable
-    right_tab = QtWidgets.QWidget()
-    right_tab_layout = QtWidgets.QVBoxLayout(right_tab)
-    right_tab.setLayout(right_tab_layout)
-    info_widget = panels.AssetInfoPanel()
-    right_tab_layout.addWidget(info_widget)
-    load_buttons_widget = panels.AssetLoadingPanel()
-    load_buttons_widget.download_button.clicked.connect(lambda:download_files(main_table_widget))
-    right_tab_layout.addWidget(load_buttons_widget)
-    right_tab_layout.setStretch(0, 1)
-
-    # Mid tab, created before because the Left tab is supposed to contain filter widget for the main table in the mid.
-    mid_tab = QtWidgets.QWidget()
-    mid_tab_layout = QtWidgets.QVBoxLayout(mid_tab)
-    mid_tab.setLayout(mid_tab_layout)
-    mid_tab_layout.addWidget(panels.AssetFilterBarPanel())
-    main_table_widget = panels.AssetMainTablePanel()
-    main_table_widget.update_table_with_asset_database(database_assets_infos)
-    main_table_widget.tableView.itemSelectionChanged.connect(lambda:fill_info_selected_in_table(main_table_widget, info_widget))
-    mid_tab_layout.addWidget(main_table_widget)
-    mid_tab_layout.setStretch(0, 0)
-    mid_tab_layout.setStretch(1, 3)
-
     # Left tab
     left_tab = QtWidgets.QWidget()
     left_tab_layout = QtWidgets.QVBoxLayout(left_tab)
@@ -43,10 +18,12 @@ def create_tab(database_assets_infos):
 
     asset_filter_widget = panels.AssetTreePanel(True)
     task_filter_widget = panels.AssetTaskFilterPanel()
-    asset_filter_widget.tree.itemChanged.connect(lambda: apply_filters_on_main_table(asset_filter_widget,
+    asset_filter_widget.tree.itemChanged.connect(lambda: apply_filters_on_main_table(filter_bar_widget,
+                                                                                     asset_filter_widget,
                                                                                      task_filter_widget,
                                                                                      main_table_widget))
-    task_filter_widget.listWidget.itemChanged.connect(lambda: apply_filters_on_main_table(asset_filter_widget,
+    task_filter_widget.listWidget.itemChanged.connect(lambda: apply_filters_on_main_table(filter_bar_widget,
+                                                                                          asset_filter_widget,
                                                                                           task_filter_widget,
                                                                                           main_table_widget))
     left_tab_layout.addWidget(asset_filter_widget)
@@ -55,6 +32,34 @@ def create_tab(database_assets_infos):
     left_tab_layout.setStretch(0, 3)
     left_tab_layout.setStretch(1, 2)
 
+    # Mid tab, created before because the Left tab is supposed to contain filter widget for the main table in the mid.
+    mid_tab = QtWidgets.QWidget()
+    mid_tab_layout = QtWidgets.QVBoxLayout(mid_tab)
+    mid_tab.setLayout(mid_tab_layout)
+    filter_bar_widget = panels.AssetFilterBarPanel()
+    filter_bar_widget.search_button.clicked.connect(lambda: apply_filters_on_main_table(filter_bar_widget,
+                                                                                        asset_filter_widget,
+                                                                                        task_filter_widget,
+                                                                                        main_table_widget))
+    mid_tab_layout.addWidget(filter_bar_widget)
+    main_table_widget = panels.AssetMainTablePanel()
+    main_table_widget.update_table_with_asset_database(database_assets_infos)
+    main_table_widget.tableView.itemSelectionChanged.connect(lambda:fill_info_selected_in_table(main_table_widget, info_widget))
+    mid_tab_layout.addWidget(main_table_widget)
+    mid_tab_layout.setStretch(0, 0)
+    mid_tab_layout.setStretch(1, 3)
+
+    # Right tab
+    right_tab = QtWidgets.QWidget()
+    right_tab_layout = QtWidgets.QVBoxLayout(right_tab)
+    right_tab.setLayout(right_tab_layout)
+    info_widget = panels.AssetInfoPanel()
+    right_tab_layout.addWidget(info_widget)
+    load_buttons_widget = panels.AssetLoadingPanel(main_table_widget)
+
+    right_tab_layout.addWidget(load_buttons_widget)
+    right_tab_layout.setStretch(0, 1)
+
     tabs.append([left_tab, 0])
     tabs.append([mid_tab, 3])
     tabs.append([right_tab, 1])
@@ -62,6 +67,11 @@ def create_tab(database_assets_infos):
 
 
 def fill_info_selected_in_table(table_widget, info_widget):
+    """
+    fill the info widget at the right of the UI with the information of the selected asset in the main table.
+    :param table_widget: widget of the table where the assets are listed.
+    :param info_widget: widget showing the infos of the selected asset in the main table.
+    """
     selected_items = table_widget.tableView.selectedItems()
     if selected_items:
         selected_row = selected_items[0].row()
@@ -77,7 +87,15 @@ def fill_info_selected_in_table(table_widget, info_widget):
         info_widget.tableView.setPlainText(infos)
 
 
-def apply_filters_on_main_table(asset_filter, task_filter, main_table_widget):
+def apply_filters_on_main_table(search_bar, asset_filter, task_filter, main_table_widget):
+    """
+    Apply the filter from Assets List, Task List and the search bar to the main table.
+    :param search_bar:
+    :param asset_filter:
+    :param task_filter:
+    :param main_table_widget:
+    :return:
+    """
     checked_tasks = []
     assets_selected = []
 
@@ -109,21 +127,16 @@ def apply_filters_on_main_table(asset_filter, task_filter, main_table_widget):
         if main_table_widget.tableView.item(row + 1, 0) is None:
             break
 
-def download_files(table_widget):
-    selected_items = table_widget.tableView.selectedItems()
-    if not selected_items:
-        dlg = QtWidgets.QMessageBox()
-        dlg.setWindowTitle('Download Issue')
-        dlg.setText("Please select something to download in the table!")
-        button = dlg.exec()
-
-        if button == QtWidgets.QMessageBox.Ok:
-            print('OK!')
-            return
-    dest_folder_widget=QtWidgets.QWidget()
-    folder = QtWidgets.QFileDialog.getExistingDirectory(dest_folder_widget, "Select Download Directory")
-    if folder:
-        download_path = folder
-        selected_row = selected_items[0].row()
-        asset_id = table_widget.tableView.item(selected_row, 7).text()
-        download_main.download_from_server(asset_id, download_path)
+    if not search_bar.lineEdit.text():
+        return
+    search_bar_asset=[]
+    for row in range(main_table_widget.tableView.rowCount()):
+        for column_index in range(main_table_widget.tableView.columnCount()):
+            column_content = main_table_widget.tableView.item(row, column_index)
+            if not column_content:
+                search_bar_asset.append(row)
+                break
+            elif search_bar.lineEdit.text().lower() in column_content.text().lower():
+                search_bar_asset.append(row)
+        if not row in search_bar_asset:
+            main_table_widget.tableView.setRowHidden(row, True)
