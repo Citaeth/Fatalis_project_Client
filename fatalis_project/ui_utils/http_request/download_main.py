@@ -18,7 +18,7 @@ def download_from_server(asset_id, download_path):
             zip_save_path = os.path.join(download_path, zip_file_name)
             os.makedirs(download_path, exist_ok=True)
             with open(zip_save_path, 'wb') as f:
-                for chunk in response.iter_content(chunk_size=8192):  # Téléchargement par morceaux
+                for chunk in response.iter_content(chunk_size=8192):
                     f.write(chunk)
             extract_path = os.path.join(download_path, f"asset_{asset_id}")
             os.makedirs(extract_path, exist_ok=True)
