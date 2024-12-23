@@ -145,6 +145,13 @@ class PublisherApplication(QtWidgets.QWidget):
         else:
             upload_to_server(path, asset_version_name, asset_name, asset_task, asset_status, user_name, infos)
 
+        qfluentwidgets.InfoBar.success('Publish Done!',
+                                       'Your asset has been published!',
+                                       orient=QtCore.Qt.Vertical,
+                                       isClosable=True,
+                                       duration=2000,
+                                       parent=self)
+
     def publish_missing_infos_dialog(self, message):
         """
         quick messagebox UI to let the user know that someting is missing in the publish information.
