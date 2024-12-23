@@ -115,6 +115,7 @@ class FilterBarPanel(QtWidgets.QWidget):
 
         self.lineEdit.setClearButtonEnabled(True)
         self.lineEdit.setPlaceholderText('Search stand')
+        self.lineEdit.returnPressed.connect(self.search_button.click)
 
 
 class MainTablePanel(QtWidgets.QWidget):
@@ -192,9 +193,10 @@ class MainTablePanel(QtWidgets.QWidget):
         row_data = [self.tableView.item(row, col).text() for col in range(self.tableView.columnCount())]
 
         menu = qfluentwidgets.RoundMenu(self)
-        action_refresh = QtGui.QAction(qfluentwidgets.FluentIcon.SYNC.icon(), "Refresh Table", self)
+        action_refresh = QtGui.QAction("Refresh Table", self)
+        action_refresh.setIcon(qfluentwidgets.FluentIcon.SYNC.icon())
         action_refresh.triggered.connect(self.refresh_table)
-        menu.addAction(qfluentwidgets.Action(qfluentwidgets.FluentIcon.SYNC, "Refresh Table"))
+        menu.addAction(action_refresh)
         menu.addSeparator()
         config = utils.get_user_config_file()[0]
         status_name_list = config.find('./assets/status').text.split(", ")
@@ -212,6 +214,7 @@ class MainTablePanel(QtWidgets.QWidget):
         function to refresh the table, should be overridden to use the database needed, depending on assets or shot
         context.
         """
+        print('coucou')
         pass
 
     def change_status(self, asset_id, status):

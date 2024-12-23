@@ -84,7 +84,7 @@ class AssetMainTablePanel(ui_panels.MainTablePanel):
         row = 0
         for row_data in database_assets_infos:
             for data_type, column_number in self.dict_asset.items():
-                data_base_info = row_data.get(data_type)
+                data_base_info = str(row_data.get(data_type))
 
                 if data_type == 'user_id' and data_base_info in user_id_to_username:
                     data_base_info = user_id_to_username[data_base_info]
