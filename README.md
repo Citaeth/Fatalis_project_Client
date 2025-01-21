@@ -1,1 +1,8 @@
 Client Side for the Data Server a 3D personal project.
+The goal was to have a private data server, to bring back a Group Project. Like all the people engaged on it aren't in the same location at all (some are in France, Canada..), I decide to create this app, usable by every user, to connect themselves to a server that I also made available in an other repo.
+with different requests, it allow them to check at the database of the server, to see what is currently stocked in it, download from it a file/folder that they need, or upload something (amazing, without any doubt) that they want to share with the others.
+For now, only the "asset" part is available, I hide the "shot" part because the logic isn't ready. At the end, it should have a way to look at all dependencies in the files, for exemple if the shot 0200 contain the Dragon (owh, spoiler), the human, and the castle, the user should only have to select the shot, load it, and the app should looked at which version of the assets it should take, and download it. 
+
+For the UI itself, I used qFluentWidget library to discover a different way to work with QT, and create an user friendly interface, with more interaction and less rigid than classic QT UI.
+The UI is also technicly usable directly in Maya, and should also become usable in Houdini, but I for now didn't made the multiples options to load the file directly from maya. I want first that we decide our workflow, as I don't want to need to think about the 1000000 ways to load something in both software :D
+For more details about the server/request side, you can find them in the other repo Fatalis_Project_Server.
